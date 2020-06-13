@@ -1,26 +1,20 @@
+import './../src/assets/styles/index.scss';
 import React from 'react';
-import logo from './logo.svg';
-import './../src/assets/styles/App.scss';
 
-function App() {
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import routes from './routes/routes';
+import RouteWrapper from './routes/RouterWrapper';
+// import AppContextProvider from './AppContext';
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        {routes.map((route, index) => {
+          return <RouteWrapper key={`route_${index}`} {...route} />;
+        })}
+      </Switch>
+    </Router>
   );
-}
+};
 
 export default App;
