@@ -1,6 +1,7 @@
 import Home from '../content/Home';
 import Profile from '../content/Profile';
 import Curriculum from '../content/Curriculum';
+import SetEntries from '../content/SetEntries';
 
 const routes = [
   { path: '/', component: Home, exact: true, title: 'Inicio' },
@@ -11,6 +12,15 @@ const routes = [
     exact: true,
     title: 'Curriculum',
   },
+  {
+    path: '/conjunto-entradas',
+    component: SetEntries,
+    exact: true,
+    title: 'Conjunto de entradas',
+  }
+
 ];
+
+
 
 export default routes;
