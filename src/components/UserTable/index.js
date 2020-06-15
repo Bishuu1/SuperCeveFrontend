@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useTable, useSortBy } from 'react-table';
 import { Row, Col, Button } from 'react-bootstrap';
 import Pagination from '../common/Pagination';
@@ -11,9 +12,9 @@ const UserTable = ({ columns, data, dataPerPage }) => {
     prepareRow,
   } = useTable({ columns, data }, useSortBy);
 
-  // const [inputValue, setInputValue] = useState('');ç
-  // const [filteredBy, setFilteredBy] = useState('');
-  // const [orderedBy, setOrderedBy] = useState('');
+  const history = useHistory();
+
+  const [inputValue, setInputValue] = useState('');
   const [filteredData, setFilteredData] = useState([]);
   const [renderedData, setRenderedData] = useState([]);
   const [indexFirstData, setIndexOfFirst] = useState(0);
@@ -46,68 +47,100 @@ const UserTable = ({ columns, data, dataPerPage }) => {
     }
   }, [currentPage, data, dataPerPage, filteredData, rows]);
 
+  useEffect(() => {
+    const filterDataByInput = (searchValue) => {
+      if (searchValue === '') {
+        setFilteredData(rows);
+      } else {
+        const searchedData = rows.filter((element) => {
+          return (
+            element.original.searchValue
+              .toLowerCase()
+              .indexOf(searchValue.toLowerCase()) !== -1
+          );
+        });
+        setFilteredData(searchedData);
+      }
+      setCurrentPage(1);
+    };
+    filterDataByInput(inputValue);
+  }, [inputValue, rows]);
+
   return (
     <React.Fragment>
       <Row>
         <Col sm={3}>
-          <Button variant="primary">Agregar usuarios</Button>{' '}
+          <Button
+            variant="primary"
+            onClick={() => {
+              history.push('/usuarios/agregar-usuario');
+            }}
+          >
+            Agregar usuarios
+          </Button>{' '}
         </Col>
         <Col sm={{ span: 3, offset: 6 }}>
-          <input type="text" placeholder="Buscar" />{' '}
+          <input
+            type="text"
+            placeholder="Buscar"
+            onChange={(e) => setInputValue(e.target.value)}
+          />{' '}
         </Col>
       </Row>
       {data.length !== 0 && (
-        <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
-          <thead>
-            {headerGroups.map((headerGroup) => (
-              <tr {...headerGroup.getHeaderGroupProps()}>
-                {headerGroup.headers.map((column) => (
-                  <th
-                    {...column.getHeaderProps(column.getSortByToggleProps())}
-                    style={{
-                      borderBottom: 'solid 3px red',
-                      background: 'aliceblue',
-                      color: 'black',
-                      fontWeight: 'bold',
-                    }}
-                  >
-                    {column.render('Header')}
-                    <span>
-                      {column.isSorted
-                        ? column.isSortedDesc
-                          ? ' 🔽'
-                          : ' 🔼'
-                        : ''}
-                    </span>
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            {renderedData.map((row) => {
-              prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => {
-                    return (
-                      <td
-                        {...cell.getCellProps()}
-                        style={{
-                          padding: '10px',
-                          border: 'solid 1px gray',
-                          background: 'papayawhip',
-                        }}
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    );
-                  })}
+        <div>
+          <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
+            <thead>
+              {headerGroups.map((headerGroup) => (
+                <tr {...headerGroup.getHeaderGroupProps()}>
+                  {headerGroup.headers.map((column) => (
+                    <th
+                      {...column.getHeaderProps(column.getSortByToggleProps())}
+                      style={{
+                        borderBottom: 'solid 3px red',
+                        background: 'aliceblue',
+                        color: 'black',
+                        fontWeight: 'bold',
+                      }}
+                    >
+                      {column.render('Header')}
+                      <span>
+                        {column.isSorted
+                          ? column.isSortedDesc
+                            ? ' 🔽'
+                            : ' 🔼'
+                          : ''}
+                      </span>
+                    </th>
+                  ))}
                 </tr>
-              );
-            })}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody {...getTableBodyProps()}>
+              {renderedData.map((row) => {
+                prepareRow(row);
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => {
+                      return (
+                        <td
+                          {...cell.getCellProps()}
+                          style={{
+                            padding: '10px',
+                            border: 'solid 1px gray',
+                            background: 'papayawhip',
+                          }}
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
       <Row>
         <Col>

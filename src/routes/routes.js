@@ -3,6 +3,8 @@ import Profile from '../content/Profile';
 import Curriculum from '../content/Curriculum';
 import Users from '../content/Users';
 import Entradas from '../content/Entradas';
+import AddUser from '../content/Users/AddUser';
+import EditUser from '../content/Users/EditUser';
 
 const routes = [
   { path: '/', component: Home, exact: true, title: 'Inicio' },
@@ -12,6 +14,18 @@ const routes = [
     component: Users,
     exact: true,
     title: 'Administracion de usuarios',
+  },
+  {
+    path: '/usuarios/agregar-usuario',
+    component: AddUser,
+    exact: true,
+    title: 'Agregar usuario',
+  },
+  {
+    path: '/usuarios/editar-usuario/:id',
+    component: EditUser,
+    exact: true,
+    title: 'Editar usuario',
   },
   {
     path: '/curriculum',
