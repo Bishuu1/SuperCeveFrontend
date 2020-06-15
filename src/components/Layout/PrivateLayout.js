@@ -7,7 +7,13 @@ import { Link } from 'react-router-dom';
 const PrivateLayout = ({ children }) => {
   return (
     <>
-      <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+      <Navbar
+        collapseOnSelect
+        expand="lg"
+        bg="dark"
+        variant="dark"
+        style={{ marginBottom: '50px' }}
+      >
         <Navbar.Brand href="#home">
           {' '}
           <img
@@ -39,7 +45,7 @@ const PrivateLayout = ({ children }) => {
           </Nav>
         </Navbar.Collapse>
       </Navbar>{' '}
-      {children}{' '}
+      <main>{children} </main>
     </>
   );
 };

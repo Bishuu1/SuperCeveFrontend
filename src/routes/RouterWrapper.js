@@ -16,7 +16,7 @@ const RouteWrapper = ({
   // Window's title
 
   return isPublic ? (
-    true && restricted ? ( //TODO LOGIN
+    true && restricted ? ( //TODO: LOGIN
       <Redirect to="/" />
     ) : (
       <Route
