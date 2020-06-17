@@ -1,7 +1,7 @@
 import './../src/assets/styles/index.scss';
 import React from 'react';
 
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Switch} from 'react-router-dom';
 import routes from './routes/routes';
 import RouteWrapper from './routes/RouterWrapper';
 // import AppContextProvider from './AppContext';
