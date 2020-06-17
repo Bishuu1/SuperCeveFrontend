@@ -5,28 +5,32 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
 import ConfirmModal from '../../components/common/Modal';
+import axios from 'axios';
+
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
 
+ 
+
   useEffect(() => {
-    const fetchData = () => {
-      fetch('https://pokeapi.co/api/v2/pokemon')
-        .then((response) => response.json())
-        .then((r) => {
-          const dataUsers = r.results.map((user, index) => {
+    const  fetchData = async() => {
+        const res = await axios.get('http://localhost:4000/api/Users');
+        console.log(res);
+          const dataUsers = res.data.Usuarios.map((user, index) => {
             return {
-              name: user.name,
-              email: user.url,
-              id: index,
-              type: 'Academico',
-              searchValue: `${user.name} ${user.url}`,
+              name: user.Nombre,
+              email: user.CorreoUsuario,
+              id: user._id,
+              type: user.TipoUsuario,
+              searchValue: `${user.Nombre} ${user.CorreoUsuario}`,
+              
             };
-          });
-          setUsers(dataUsers);
+          
         });
+        setUsers(dataUsers);
     };
     fetchData();
   }, []);

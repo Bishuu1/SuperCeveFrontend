@@ -2,7 +2,9 @@ import React from "react";
 import { Button, Tab, Nav, Form } from "react-bootstrap";
 
 const SetEntries = () => {
+  
   return (
+    
     <div class="container-fluid mt-2 mt-4">
       <div class="row">
         <div class="col-md-3 col-sm-5">
