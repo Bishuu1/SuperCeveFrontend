@@ -1,19 +1,116 @@
 import React from "react";
-import { Button, Tab, Nav, Form } from "react-bootstrap";
+import { Button, Tab, Nav, Form, Row, Col, Modal, Container} from "react-bootstrap";
+import ConfirmModal from '../../components/common/Modal';
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const SetEntries = () => {
+
+  const [show, setShow] = useState([]);
+  const history = useHistory();
+  const [showModal, setShowModal] = useState(false);
+
+  const [modalShow, setModalShow] = useState(false); // estare repitiendo variable ?
+
+  function ModalAgregarConjunto(props) {
+    return (
+      <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Agregar conjunto
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="show-grid">
+
+          <Container>
+            <Form>
+              <Form.Group controlId="exampleForm.ControlInput1">
+                <Form.Label>Nombre del conjunto</Form.Label>
+                <Form.Control placeholder="Ingresar nombre" />
+              </Form.Group>
+            </Form>
+          </Container>
+
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button  variant="secondary" onClick={props.onHide}>Cerrar</Button>
+          <Button onClick={props.onHide}>Agregar</Button>
+        </Modal.Footer>
+        
+      </Modal>
+    );
+  }
+
+  
+  function ModalAgregarEntrada(props) {
+    return (
+      <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Agregar Entrada
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="show-grid">
+          <Container>
+
+                <Form.Group controlId="exampleForm.ControlSelect1">
+                  <Form.Label>Tipo de entrada</Form.Label>
+                  <Form.Control as="select">
+                    <option>Publicación</option>
+                    <option>Premio</option>
+                    <option>Conferencia</option>
+                    <option>Concurso</option>
+                  </Form.Control>
+                </Form.Group>
+
+              <Form.Group controlId="exampleForm.ControlInput1" label="disabled" >
+                <Form.Label>fecha</Form.Label>
+                <Form.Control placeholder="fecha" />
+              </Form.Group>
+
+          </Container>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button  variant="secondary" onClick={props.onHide}>Cerrar</Button>
+          <Button onClick={props.onHide}>Agregar</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
   return (
+ 
+    <>
+    <ConfirmModal
+    title="Eliminar Entrada"
+    text="¿Esta seguro que quiere eliminar la entrada?"
+    buttonText="Eliminar"
+    showModal={showModal}
+    onCloseModal={() => setShowModal(false)}
+  />
+
     <div class="container-fluid mt-2 mt-4">
       <div class="row">
         <div class="col-md-3 col-sm-5">
           <div class="card">
+
             <div class="card-header text-center bg-dark">
               <h6 class="text-white mt-1">
                 <strong>Conjunto de entradas</strong>
               </h6>
-              <Button variant="success" size="sm">
+              
+              <Button variant="success" size="sm" onClick={() => setModalShow(true)}>
                 Agregar conjunto
               </Button>{" "}
+
+              <ModalAgregarConjunto show={modalShow} onHide={() => setModalShow(false)} />
+
             </div>
 
             <div class="table-responsive">
@@ -151,12 +248,14 @@ const SetEntries = () => {
                       <div class="col col-md-4 text-right">
                         <h5 class="mb-0">
                           <Button
-                            onClick=""
+                            onClick={() => setModalShow(true)}
                             variant="success"
                             title="Agregar Entrada"
                           >
                             Agregar
                           </Button>{" "}
+                          <ModalAgregarEntrada show={modalShow} onHide={() => setModalShow(false)} />
+
                         </h5>
                       </div>
                     </div>
@@ -233,6 +332,7 @@ const SetEntries = () => {
                                     viewBox="0 0 16 16"
                                     fill="currentColor"
                                     xmlns="http://www.w3.org/2000/svg"
+                                    onClick={() => setShowModal(true)}
                                   >
                                     <path
                                       fill-rule="evenodd"
@@ -495,6 +595,8 @@ const SetEntries = () => {
         </div>
       </div>
     </div>
+  </>
+
   );
 };
 
