@@ -10,7 +10,7 @@ const SetEntries = () => {
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
 
-  const [modalShow, setModalShow] = useState(false); // estare repitiendo variable ?
+  const [modalShow, setModalShow] = useState(false); // estare repitiendo variable ? si
 
   function ModalAgregarConjunto(props) {
     return (
@@ -138,7 +138,7 @@ const SetEntries = () => {
                             marginTop: "12px",
                             marginBottom: "12px",
                           }}
-                          eventKey="first"
+                          eventKey="1"
                         >
                           Conjunto de entrada 1
                         </Nav.Link>
@@ -153,7 +153,7 @@ const SetEntries = () => {
                             marginTop: "12px",
                             marginBottom: "12px",
                           }}
-                          eventKey="second"
+                          eventKey="2"
                         >
                           conjunto de entrada 2
                         </Nav.Link>
@@ -168,56 +168,13 @@ const SetEntries = () => {
                             marginTop: "12px",
                             marginBottom: "12px",
                           }}
-                          eventKey="ter"
+                          eventKey="3"
                         >
                           conjunto de entrada 3
                         </Nav.Link>
                       </Nav.Item>
 
-                      <Nav.Item class="card bg-light">
-                        <Nav.Link
-                          style={{
-                            height: "4rem",
-                            border: "1px solid",
-                            borderColor: "rgba(0, 0, 0, 0.125)",
-                            marginTop: "12px",
-                            marginBottom: "12px",
-                          }}
-                          eventKey="4"
-                        >
-                          conjunto de entrada 3
-                        </Nav.Link>
-                      </Nav.Item>
 
-                      <Nav.Item class="card bg-light">
-                        <Nav.Link
-                          style={{
-                            height: "4rem",
-                            border: "1px solid",
-                            borderColor: "rgba(0, 0, 0, 0.125)",
-                            marginTop: "12px",
-                            marginBottom: "12px",
-                          }}
-                          eventKey="5"
-                        >
-                          conjunto de entrada 3
-                        </Nav.Link>
-                      </Nav.Item>
-
-                      <Nav.Item class="card bg-light">
-                        <Nav.Link
-                          style={{
-                            height: "4rem",
-                            border: "1px solid",
-                            borderColor: "rgba(0, 0, 0, 0.125)",
-                            marginTop: "12px",
-                            marginBottom: "12px",
-                          }}
-                          eventKey="6"
-                        >
-                          conjunto de entrada 3
-                        </Nav.Link>
-                      </Nav.Item>
                     </Nav>
                   </Tab.Container>
                 </div>

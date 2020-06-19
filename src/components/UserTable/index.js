@@ -4,6 +4,7 @@ import { useTable, useSortBy } from 'react-table';
 import { Row, Col, Button } from 'react-bootstrap';
 import Pagination from '../common/Pagination';
 const UserTable = ({ columns, data, dataPerPage }) => {
+  
   const {
     getTableProps,
     getTableBodyProps,
