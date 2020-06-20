@@ -1,7 +1,14 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-const ConfirmModal = ({ title, text, buttonText, showModal, onCloseModal }) => {
+const ConfirmModal = ({
+  title,
+  text,
+  buttonText,
+  showModal,
+  onCloseModal,
+  onSaveModal,
+}) => {
   return (
     <>
       <Modal
@@ -20,7 +27,7 @@ const ConfirmModal = ({ title, text, buttonText, showModal, onCloseModal }) => {
           <Button variant="secondary" onClick={onCloseModal}>
             Close
           </Button>
-          <Button variant="primary" onClick={onCloseModal}>
+          <Button variant="primary" onClick={onSaveModal}>
             {buttonText}
           </Button>
         </Modal.Footer>
