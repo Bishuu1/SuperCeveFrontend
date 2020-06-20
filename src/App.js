@@ -4,16 +4,20 @@ import React from 'react';
 import { BrowserRouter as Router, Switch} from 'react-router-dom';
 import routes from './routes/routes';
 import RouteWrapper from './routes/RouterWrapper';
+import { ToastContainer } from 'react-toastify';
 // import AppContextProvider from './AppContext';
 const App = () => {
   return (
-    <Router>
-      <Switch>
-        {routes.map((route, index) => {
-          return <RouteWrapper key={`route_${index}`} {...route} />;
-        })}
-      </Switch>
-    </Router>
+    <>
+      <Router>
+        <Switch>
+          {routes.map((route, index) => {
+            return <RouteWrapper key={`route_${index}`} {...route} />;
+          })}
+        </Switch>
+      </Router>
+      <ToastContainer />
+    </>
   );
 };
 

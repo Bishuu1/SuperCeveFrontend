@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { useTable, useSortBy } from 'react-table';
 import { Row, Col, Button } from 'react-bootstrap';
 import Pagination from '../common/Pagination';
+import { showToast } from '../common/Toast';
 const UserTable = ({ columns, data, dataPerPage }) => {
   
   const {
@@ -85,6 +86,12 @@ const UserTable = ({ columns, data, dataPerPage }) => {
             type="text"
             placeholder="Buscar"
             onChange={(e) => setInputValue(e.target.value)}
+            onClick={() => {
+              showToast({
+                type: 'success',
+                text: 'Se ha guardado usuario con exito',
+              });
+            }}
           />{' '}
         </Col>
       </Row>

@@ -2,14 +2,32 @@ import React from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import {
-  Input,
-  Select,
-  TextArea,
-} from '../../../components/common/forms/fields';
+import { Input, Select } from '../../../components/common/forms/fields';
 import { useHistory } from 'react-router-dom';
+import UsersAPI from '../users-api';
+import { showToast } from '../../../components/common/Toast';
 const AddUser = () => {
   const history = useHistory();
+
+  const handleSubmit = (values) => {
+    UsersAPI.createUser(values)
+      .then((response) => {
+        showToast({
+          type: 'success',
+          text: 'Se ha guardado usuario con exito',
+        });
+        // history.push('/usuarios');
+      })
+      .catch(() => {
+        showToast({
+          type: 'error',
+          text: 'Error al guardar usuario',
+        });
+      })
+      .finally(() => {
+        history.push('/usuarios');
+      });
+  };
   return (
     <Container fluid>
       <Row>
@@ -19,71 +37,77 @@ const AddUser = () => {
         <Col sm={{ span: 8, offset: 2 }}>
           <Formik
             initialValues={{
-              name: '',
-              type: '',
-              password: '',
-              rut: '',
-              birthDate: '',
-              scholarID: '',
-              description: '',
-              email: '',
+              Nombre: '',
+              NivelAcceso: '',
+              Contraseña: '',
+              Rut: '',
+              FechaNacimiento: '',
+              LinkGoogleScholar: '',
+              CorreoUsuario: '',
             }}
             validationSchema={Yup.object({
-              name: Yup.string().required('Ingrese el nombre'),
-              email: Yup.string()
+              Nombre: Yup.string().required('Ingrese el nombre'),
+              CorreoUsuario: Yup.string()
                 .email('Formato incorrecto')
                 .required('Ingrese usuario'),
-              password: Yup.string().required('Ingrese contraseña'),
-              type: Yup.string().required('Escoja el nivel de accceso'),
-              rut: Yup.string().required('Rut requerido'),
-              birthDate: Yup.string().required('Fecha de nacimiento requerida'),
-              scholarID: Yup.string().required('Ingrese id del perfil'),
+              Contraseña: Yup.string().required('Ingrese contraseña'),
+              NivelAcceso: Yup.string().required('Escoja el nivel de accceso'),
+              Rut: Yup.string().required('Rut requerido'),
+              FechaNacimiento: Yup.string().required(
+                'Fecha de nacimiento requerida'
+              ),
+              LinkGoogleScholar: Yup.string().required('Ingrese id del perfil'),
             })}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={handleSubmit}
           >
             <Form>
               <Row>
                 <Col sm={5}>
-                  <Input type="text" name="name" label="Nombre" />
+                  <Input type="text" name="Nombre" label="Nombre" />
                 </Col>
                 <Col sm={{ span: 5, offset: 2 }}>
-                  <Input type="text" name="password" label="Contraseña" />
+                  <Input type="text" name="Contraseña" label="Contraseña" />
                 </Col>
               </Row>
               <Row>
                 <Col sm={5}>
-                  <Select type="select" name="type" label="Tipo de usuario">
+                  <Select
+                    type="select"
+                    name="NivelAcceso"
+                    label="Tipo de usuario"
+                  >
                     <option value="1">Administrador</option>
-                    <option value="1">Secretaria</option>
-                    <option value="1">Academico</option>
+                    <option value="2">Secretaria</option>
+                    <option value="3">Academico</option>
                   </Select>
                 </Col>
                 <Col sm={{ span: 5, offset: 2 }}>
-                  <Input type="text" name="rut" label="Rut" />
+                  <Input type="text" name="Rut" label="Rut" />
                 </Col>
               </Row>
               <Row>
                 <Col sm={5}>
                   <Input
                     type="text"
-                    name="birthDate"
+                    name="FechaNacimiento"
                     label="Fecha nacimiento"
                   />
                 </Col>
                 <Col sm={{ span: 5, offset: 2 }}>
-                  <Input type="text" name="scholarID" label="Scholar ID" />
+                  <Input
+                    type="text"
+                    name="LinkGoogleScholar"
+                    label="Scholar ID"
+                  />
                 </Col>
               </Row>
               <Row>
-                <Col sm={5}>
-                  <TextArea
+                <Col sm={{ span: 5 }}>
+                  <Input
                     type="text"
-                    name="description"
-                    label="Descripcion"
+                    name="CorreoUsuario"
+                    label="Correo electronico"
                   />
-                </Col>
-                <Col sm={{ span: 5, offset: 2 }}>
-                  <Input type="text" name="email" label="Correo electronico" />
                   <Row>
                     <Col sm={4}>
                       <Button

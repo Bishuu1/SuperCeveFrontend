@@ -2,9 +2,10 @@ import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import super_cv from '../../assets/images/super_cv.png';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 const PrivateLayout = ({ children }) => {
+  const history = useHistory();
   return (
     <>
       <Navbar
@@ -27,17 +28,15 @@ const PrivateLayout = ({ children }) => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link>
-              <Link to="/perfil">Perfil</Link>
+            <Nav.Link onClick={() => history.push('/perfil')}>Perfil</Nav.Link>
+            <Nav.Link onClick={() => history.push('/curriculum')}>
+              Curriculum
             </Nav.Link>
-            <Nav.Link>
-              <Link to="/curriculum">Curriculum</Link>
+            <Nav.Link onClick={() => history.push('/conjunto-entradas')}>
+              Conjunto de entrada
             </Nav.Link>
-            <Nav.Link>
-              <Link to="/conjunto-entradas">Conjunto de entrada</Link>
-            </Nav.Link>
-            <Nav.Link>
-              <Link to="/usuarios">Usuarios</Link>
+            <Nav.Link onClick={() => history.push('/usuarios')}>
+              Usuarios
             </Nav.Link>
           </Nav>
           <Nav>
@@ -45,7 +44,7 @@ const PrivateLayout = ({ children }) => {
           </Nav>
         </Navbar.Collapse>
       </Navbar>{' '}
-      <main>{children} </main>
+      <main>{children}</main>
     </>
   );
 };

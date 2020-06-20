@@ -5,35 +5,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { useHistory } from 'react-router-dom';
 import ConfirmModal from '../../components/common/Modal';
-import axios from 'axios';
-
-
+import UsersAPI from './users-api';
+import { USER_TYPE } from '../../data/userType';
+import { showToast } from '../../components/common/Toast';
 const Users = () => {
   const [users, setUsers] = useState([]);
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
-
- 
+  const [deletedID, setDeletedID] = useState('');
 
   useEffect(() => {
-    const  fetchData = async() => {
-        const res = await axios.get('http://localhost:4000/api/Users');
-        console.log(res);
-          const dataUsers = res.data.Usuarios.map((user, index) => {
-            return {
-              name: user.Nombre,
-              email: user.CorreoUsuario,
-              id: user._id,
-              type: user.TipoUsuario,
-              searchValue: `${user.Nombre} ${user.CorreoUsuario}`,
-              
-            };
-          
+    const fetchData = () => {
+      UsersAPI.getUsers().then((response) => {
+        console.log(response);
+        const dataUsers = response.Usuarios.map((user, index) => {
+          return {
+            name: user.Nombre,
+            email: user.CorreoUsuario,
+            id: user._id,
+            type: USER_TYPE[user.NivelAcceso],
+            searchValue: `${user.Nombre} ${user.CorreoUsuario}`,
+          };
         });
         setUsers(dataUsers);
+      });
     };
     fetchData();
-  }, []);
+  }, [deletedID]);
+
   const columns = React.useMemo(
     () => [
       {
@@ -55,7 +54,10 @@ const Users = () => {
               <FontAwesomeIcon
                 icon={faTrash}
                 style={{ marginRight: '15px', cursor: 'pointer' }}
-                onClick={() => setShowModal(true)}
+                onClick={() => {
+                  setDeletedID(user.id);
+                  setShowModal(true);
+                }}
               />
               <FontAwesomeIcon
                 icon={faEdit}
@@ -70,7 +72,7 @@ const Users = () => {
         id: 'actions',
       },
     ],
-    []
+    [history]
   );
   return (
     <Container fluid>
@@ -79,7 +81,27 @@ const Users = () => {
         text="Esta seguro que quiere eliminar el usuario?"
         buttonText="Eliminar"
         showModal={showModal}
-        onCloseModal={() => setShowModal(false)}
+        onCloseModal={() => {
+          setDeletedID('');
+          setShowModal(false);
+        }}
+        onSaveModal={() => {
+          UsersAPI.deleteUser(deletedID)
+            .then(() => {
+              setDeletedID('');
+              showToast({
+                type: 'success',
+                text: 'Se ha eliminado al usuario con éxito',
+              });
+              setShowModal(false);
+            })
+            .catch(() => {
+              showToast({
+                type: 'error',
+                text: 'Error en la eliminación',
+              });
+            });
+        }}
       />
       <Row>
         <Col sm={12}>
