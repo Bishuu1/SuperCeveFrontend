@@ -44,7 +44,6 @@ const SetEntries = () => {
     );
   }
 
-  
   function ModalAgregarEntrada(props) {
     return (
       <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
@@ -58,20 +57,21 @@ const SetEntries = () => {
         <Modal.Body className="show-grid">
           <Container>
 
-                <Form.Group controlId="exampleForm.ControlSelect1">
+                <Form.Group id="tipos" onChange= "mostrar(this.value)">
                   <Form.Label>Tipo de entrada</Form.Label>
-                  <Form.Control as="select">
-                    <option>Publicación</option>
-                    <option>Premio</option>
-                    <option>Conferencia</option>
-                    <option>Concurso</option>
+                  <Form.Control as="select" onChange="">
+                    <option value="publicacion">Publicación</option>
+                    <option value="premio">Premio</option>
+                    <option value="conferencia">Conferencia</option>
+                    <option value="concurso">Concurso</option>
                   </Form.Control>
                 </Form.Group>
 
-              <Form.Group controlId="exampleForm.ControlInput1" label="disabled" >
+              <Form.Group id="fecha"  >
                 <Form.Label>fecha</Form.Label>
                 <Form.Control placeholder="fecha" />
               </Form.Group>
+
 
           </Container>
         </Modal.Body>
@@ -105,9 +105,9 @@ const SetEntries = () => {
                 <strong>Conjunto de entradas</strong>
               </h6>
               
-              <Button variant="success" size="sm" onClick={() => setModalShow(true)}>
+              <Button variant="success" style={{padding: "5px 16px"}} onClick={() => setModalShow(true)}>
                 Agregar conjunto
-              </Button>{" "}
+              </Button>
 
               <ModalAgregarConjunto show={modalShow} onHide={() => setModalShow(false)} />
 
@@ -126,9 +126,10 @@ const SetEntries = () => {
                 <div class="container">
                   <Tab.Container
                     id="left-tabs-example"
-                    defaultActiveKey="first"
+                    defaultActiveKey="1"
                   >
                     <Nav variant="pills" className="flex-column">
+
                       <Nav.Item>
                         <Nav.Link
                           style={{
@@ -213,7 +214,16 @@ const SetEntries = () => {
                           </Button>{" "}
                           <ModalAgregarEntrada show={modalShow} onHide={() => setModalShow(false)} />
 
+                          <Button
+                            variant="danger"
+                            title="Actualizar entradas"
+
+                          >Actualizar entradas</Button>
+                          
                         </h5>
+                          
+
+
                       </div>
                     </div>
                   </div>
