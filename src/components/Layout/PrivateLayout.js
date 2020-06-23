@@ -40,7 +40,14 @@ const PrivateLayout = ({ children }) => {
             </Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link href="#deets">Cerrar sesión</Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                window.sessionStorage.removeItem('user');
+                history.push('/login');
+              }}
+            >
+              Cerrar sesión
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Navbar>{' '}

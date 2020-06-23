@@ -4,6 +4,7 @@ import { Redirect, Route } from 'react-router-dom';
 // import { isLogin } from '../utils/session';
 import PrivateLayout from '../components/Layout/PrivateLayout';
 import PublicLayout from '../components/Layout/PublicLayout';
+import { isLogin } from '../utils/session';
 
 const RouteWrapper = ({
   component: Component,
@@ -16,7 +17,7 @@ const RouteWrapper = ({
   // Window's title
 
   return isPublic ? (
-    true && restricted ? ( //TODO: LOGIN
+    isLogin() ? ( //TODO: LOGIN
       <Redirect to="/" />
     ) : (
       <Route
@@ -28,7 +29,7 @@ const RouteWrapper = ({
         )}
       />
     )
-  ) : true ? ( //TODO: LOGIN
+  ) : isLogin() ? ( //TODO: LOGIN
     <Route
       path={path}
       render={(props) => (
@@ -38,7 +39,7 @@ const RouteWrapper = ({
       )}
     />
   ) : (
-    <Redirect to="/" />
+    <Redirect to="/login" />
   );
 };
 

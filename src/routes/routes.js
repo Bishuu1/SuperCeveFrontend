@@ -6,9 +6,17 @@ import Users from '../content/Users';
 import Entradas from '../content/Entradas';
 import AddUser from '../content/Users/AddUser';
 import EditUser from '../content/Users/EditUser';
+import Login from '../content/Login';
 
 const routes = [
   { path: '/', component: Home, exact: true, title: 'Inicio' },
+  {
+    path: '/login',
+    component: Login,
+    exact: true,
+    title: 'Login',
+    isPublic: true,
+  },
   { path: '/perfil', component: Profile, exact: true, title: 'Perfil' },
   {
     path: '/usuarios',
@@ -48,7 +56,5 @@ const routes = [
     title: 'Entradas',
   },
 ];
-
-
 
 export default routes;
