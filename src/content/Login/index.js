@@ -6,12 +6,16 @@ import { Input } from '../../components/common/forms/fields';
 import { Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
+import LoginAPI from './login-api';
 
 const Login = () => {
   const history = useHistory();
   const handleSubmit = (values) => {
-    window.sessionStorage.setItem('user', JSON.stringify(values));
-    history.push('/');
+    console.log(values);
+    LoginAPI.login(values).then((response) => {
+      window.sessionStorage.setItem('user', JSON.stringify(response));
+      history.push('/');
+    });
   };
   return (
     <div
@@ -27,10 +31,10 @@ const Login = () => {
       <h2>Inicio de sesion</h2>
       <div style={{ marginTop: '16px', padding: '16px' }}>
         <Formik
-          initialValues={{ name: '', password: '' }}
+          initialValues={{ CorreoUsuario: '', Contraseña: '' }}
           validationSchema={Yup.object().shape({
-            name: Yup.string().required('Usuario requerido'),
-            password: Yup.string().required('Contraseña requerida'),
+            CorreoUsuario: Yup.string().required('Usuario requerido'),
+            Contraseña: Yup.string().required('Contraseña requerida'),
           })}
           onSubmit={handleSubmit}
         >
@@ -38,13 +42,13 @@ const Login = () => {
             <Input
               type="text"
               placeholder="Correo electronico"
-              name="name"
+              name="CorreoUsuario"
               label="Usuario"
             />
             <Input
               type="password"
               placeholder="Correo electronico"
-              name="password"
+              name="Contraseña"
               label="Contraseña"
             />
             <Button variant="success" size="sm" type="submit">
