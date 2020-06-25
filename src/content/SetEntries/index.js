@@ -1,21 +1,116 @@
 import React from "react";
-import { Button, Tab, Nav, Form } from "react-bootstrap";
+import { Button, Tab, Nav, Form, Row, Col, Modal, Container} from "react-bootstrap";
+import ConfirmModal from '../../components/common/Modal';
+import { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 const SetEntries = () => {
-  
+
+  const [show, setShow] = useState([]);
+  const history = useHistory();
+  const [showModal, setShowModal] = useState(false);
+
+  const [modalShow, setModalShow] = useState(false); // estare repitiendo variable ? si
+
+  function ModalAgregarConjunto(props) {
+    return (
+      <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Agregar conjunto
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="show-grid">
+
+          <Container>
+            <Form>
+              <Form.Group controlId="exampleForm.ControlInput1">
+                <Form.Label>Nombre del conjunto</Form.Label>
+                <Form.Control placeholder="Ingresar nombre" />
+              </Form.Group>
+            </Form>
+          </Container>
+
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button  variant="secondary" onClick={props.onHide}>Cerrar</Button>
+          <Button onClick={props.onHide}>Agregar</Button>
+        </Modal.Footer>
+        
+      </Modal>
+    );
+  }
+
+  function ModalAgregarEntrada(props) {
+    return (
+      <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
+
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Agregar Entrada
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="show-grid">
+          <Container>
+
+                <Form.Group id="tipos" onChange= "mostrar(this.value)">
+                  <Form.Label>Tipo de entrada</Form.Label>
+                  <Form.Control as="select" onChange="">
+                    <option value="publicacion">Publicación</option>
+                    <option value="premio">Premio</option>
+                    <option value="conferencia">Conferencia</option>
+                    <option value="concurso">Concurso</option>
+                  </Form.Control>
+                </Form.Group>
+
+              <Form.Group id="fecha"  >
+                <Form.Label>fecha</Form.Label>
+                <Form.Control placeholder="fecha" />
+              </Form.Group>
+
+
+          </Container>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button  variant="secondary" onClick={props.onHide}>Cerrar</Button>
+          <Button onClick={props.onHide}>Agregar</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
   return (
-    
+ 
+    <>
+    <ConfirmModal
+    title="Eliminar Entrada"
+    text="¿Esta seguro que quiere eliminar la entrada?"
+    buttonText="Eliminar"
+    showModal={showModal}
+    onCloseModal={() => setShowModal(false)}
+  />
+
     <div class="container-fluid mt-2 mt-4">
       <div class="row">
         <div class="col-md-3 col-sm-5">
           <div class="card">
+
             <div class="card-header text-center bg-dark">
               <h6 class="text-white mt-1">
                 <strong>Conjunto de entradas</strong>
               </h6>
-              <Button variant="success" size="sm">
+              
+              <Button variant="success" style={{padding: "5px 16px"}} onClick={() => setModalShow(true)}>
                 Agregar conjunto
-              </Button>{" "}
+              </Button>
+
+              <ModalAgregarConjunto show={modalShow} onHide={() => setModalShow(false)} />
+
             </div>
 
             <div class="table-responsive">
@@ -31,9 +126,10 @@ const SetEntries = () => {
                 <div class="container">
                   <Tab.Container
                     id="left-tabs-example"
-                    defaultActiveKey="first"
+                    defaultActiveKey="1"
                   >
                     <Nav variant="pills" className="flex-column">
+
                       <Nav.Item>
                         <Nav.Link
                           style={{
@@ -43,7 +139,7 @@ const SetEntries = () => {
                             marginTop: "12px",
                             marginBottom: "12px",
                           }}
-                          eventKey="first"
+                          eventKey="1"
                         >
                           Conjunto de entrada 1
                         </Nav.Link>
@@ -58,7 +154,7 @@ const SetEntries = () => {
                             marginTop: "12px",
                             marginBottom: "12px",
                           }}
-                          eventKey="second"
+                          eventKey="2"
                         >
                           conjunto de entrada 2
                         </Nav.Link>
@@ -73,56 +169,13 @@ const SetEntries = () => {
                             marginTop: "12px",
                             marginBottom: "12px",
                           }}
-                          eventKey="ter"
+                          eventKey="3"
                         >
                           conjunto de entrada 3
                         </Nav.Link>
                       </Nav.Item>
 
-                      <Nav.Item class="card bg-light">
-                        <Nav.Link
-                          style={{
-                            height: "4rem",
-                            border: "1px solid",
-                            borderColor: "rgba(0, 0, 0, 0.125)",
-                            marginTop: "12px",
-                            marginBottom: "12px",
-                          }}
-                          eventKey="4"
-                        >
-                          conjunto de entrada 3
-                        </Nav.Link>
-                      </Nav.Item>
 
-                      <Nav.Item class="card bg-light">
-                        <Nav.Link
-                          style={{
-                            height: "4rem",
-                            border: "1px solid",
-                            borderColor: "rgba(0, 0, 0, 0.125)",
-                            marginTop: "12px",
-                            marginBottom: "12px",
-                          }}
-                          eventKey="5"
-                        >
-                          conjunto de entrada 3
-                        </Nav.Link>
-                      </Nav.Item>
-
-                      <Nav.Item class="card bg-light">
-                        <Nav.Link
-                          style={{
-                            height: "4rem",
-                            border: "1px solid",
-                            borderColor: "rgba(0, 0, 0, 0.125)",
-                            marginTop: "12px",
-                            marginBottom: "12px",
-                          }}
-                          eventKey="6"
-                        >
-                          conjunto de entrada 3
-                        </Nav.Link>
-                      </Nav.Item>
                     </Nav>
                   </Tab.Container>
                 </div>
@@ -153,13 +206,24 @@ const SetEntries = () => {
                       <div class="col col-md-4 text-right">
                         <h5 class="mb-0">
                           <Button
-                            onClick=""
+                            onClick={() => setModalShow(true)}
                             variant="success"
                             title="Agregar Entrada"
                           >
                             Agregar
                           </Button>{" "}
+                          <ModalAgregarEntrada show={modalShow} onHide={() => setModalShow(false)} />
+
+                          <Button
+                            variant="danger"
+                            title="Actualizar entradas"
+
+                          >Actualizar entradas</Button>
+                          
                         </h5>
+                          
+
+
                       </div>
                     </div>
                   </div>
@@ -235,6 +299,7 @@ const SetEntries = () => {
                                     viewBox="0 0 16 16"
                                     fill="currentColor"
                                     xmlns="http://www.w3.org/2000/svg"
+                                    onClick={() => setShowModal(true)}
                                   >
                                     <path
                                       fill-rule="evenodd"
@@ -497,6 +562,8 @@ const SetEntries = () => {
         </div>
       </div>
     </div>
+  </>
+
   );
 };
 
