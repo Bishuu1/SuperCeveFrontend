@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -6,19 +6,24 @@ import { Input, Select } from '../../../components/common/forms/fields';
 import { useHistory, useParams } from 'react-router-dom';
 import UsersAPI from '../users-api';
 import { showToast } from '../../../components/common/Toast';
+import { AppContext } from '../../../app/AppContext';
 const AddUser = () => {
   const history = useHistory();
   const [user, setUser] = useState(null);
   let { id } = useParams();
+  const { user: User } = useContext(AppContext);
 
   useEffect(() => {
-    const fetchData = async () => {
-      UsersAPI.getUser(id).then((response) => {
-        setUser(response.Usuario);
-      });
-    };
-    fetchData();
-  }, [id]);
+    if (User.user?.NivelAcceso === 3) {
+    } else {
+      const fetchData = async () => {
+        UsersAPI.getUser(id).then((response) => {
+          setUser(response.Usuario);
+        });
+      };
+      fetchData();
+    }
+  }, [id, User]);
 
   const handleSubmit = (values) => {
     UsersAPI.updateUser(id, values)

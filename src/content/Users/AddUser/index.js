@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -6,9 +6,13 @@ import { Input, Select } from '../../../components/common/forms/fields';
 import { useHistory } from 'react-router-dom';
 import UsersAPI from '../users-api';
 import { showToast } from '../../../components/common/Toast';
+import { AppContext } from '../../../app/AppContext';
 const AddUser = () => {
   const history = useHistory();
-
+  const { user } = useContext(AppContext);
+  useEffect(() => {
+    user.user?.NivelAcceso === 3 && history.push('/');
+  }, [history, user]);
   const handleSubmit = (values) => {
     UsersAPI.createUser(values)
       .then((response) => {
@@ -76,6 +80,7 @@ const AddUser = () => {
                     name="NivelAcceso"
                     label="Tipo de usuario"
                   >
+                    <option value="">Seleccione tipo</option>
                     <option value="1">Administrador</option>
                     <option value="2">Secretaria</option>
                     <option value="3">Academico</option>

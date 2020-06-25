@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import { Formik, Form } from 'formik';
@@ -7,13 +7,15 @@ import { Button } from 'react-bootstrap';
 import * as Yup from 'yup';
 import { useHistory } from 'react-router-dom';
 import LoginAPI from './login-api';
+import { AppContext } from '../../app/AppContext';
 
 const Login = () => {
+  const { user } = useContext(AppContext);
   const history = useHistory();
   const handleSubmit = (values) => {
-    console.log(values);
     LoginAPI.login(values).then((response) => {
       window.sessionStorage.setItem('user', JSON.stringify(response));
+      user.actions.setUser(response);
       history.push('/');
     });
   };

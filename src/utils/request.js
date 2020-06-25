@@ -20,9 +20,7 @@ client.interceptors.response.use(
  * Request Wrapper with default success/error actions
  */
 const request = (options) => {
-  console.log('request');
   const onSuccess = (response) => {
-    console.log('success');
     return response.data;
   };
 

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import super_cv from '../../assets/images/super_cv.png';
 import { useHistory } from 'react-router-dom';
+import { AppContext } from '../../app/AppContext';
 
 const PrivateLayout = ({ children }) => {
+  const { user } = useContext(AppContext);
   const history = useHistory();
   return (
     <>
@@ -26,30 +28,41 @@ const PrivateLayout = ({ children }) => {
           />
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="mr-auto">
-            <Nav.Link onClick={() => history.push('/perfil')}>Perfil</Nav.Link>
-            <Nav.Link onClick={() => history.push('/curriculum')}>
-              Curriculum
-            </Nav.Link>
-            <Nav.Link onClick={() => history.push('/conjunto-entradas')}>
-              Conjunto de entrada
-            </Nav.Link>
-            <Nav.Link onClick={() => history.push('/usuarios')}>
-              Usuarios
-            </Nav.Link>
-          </Nav>
-          <Nav>
-            <Nav.Link
-              onClick={() => {
-                window.sessionStorage.removeItem('user');
-                history.push('/login');
-              }}
-            >
-              Cerrar sesión
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
+        {user.user && (
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link onClick={() => history.push('/perfil')}>
+                Perfil
+              </Nav.Link>
+              {user.user.NivelAcceso === 3 && (
+                <Nav.Link onClick={() => history.push('/curriculum')}>
+                  Curriculum
+                </Nav.Link>
+              )}
+              {user.user.NivelAcceso === 3 && (
+                <Nav.Link onClick={() => history.push('/conjunto-entradas')}>
+                  Conjunto de entrada
+                </Nav.Link>
+              )}
+              {user.user.NivelAcceso === 1 && (
+                <Nav.Link onClick={() => history.push('/usuarios')}>
+                  Usuarios
+                </Nav.Link>
+              )}
+            </Nav>
+            <Nav>
+              <Nav.Link
+                onClick={() => {
+                  window.sessionStorage.removeItem('user');
+                  user.actions.cleanUser();
+                  history.push('/login');
+                }}
+              >
+                Cerrar sesión
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        )}
       </Navbar>{' '}
       <main>{children}</main>
     </>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import UserTable from '../../components/UserTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -8,30 +8,35 @@ import ConfirmModal from '../../components/common/Modal';
 import UsersAPI from './users-api';
 import { USER_TYPE } from '../../data/userType';
 import { showToast } from '../../components/common/Toast';
+import { AppContext } from '../../app/AppContext';
 const Users = () => {
   const [users, setUsers] = useState([]);
+  const { user } = useContext(AppContext);
   const history = useHistory();
   const [showModal, setShowModal] = useState(false);
   const [deletedID, setDeletedID] = useState('');
 
   useEffect(() => {
-    const fetchData = () => {
-      UsersAPI.getUsers().then((response) => {
-        console.log(response);
-        const dataUsers = response.Usuarios.map((user, index) => {
-          return {
-            name: user.Nombre,
-            email: user.CorreoUsuario,
-            id: user._id,
-            type: USER_TYPE[user.NivelAcceso],
-            searchValue: `${user.Nombre} ${user.CorreoUsuario}`,
-          };
+    if (user.user?.NivelAcceso === 3) {
+      history.push('/');
+    } else {
+      const fetchData = () => {
+        UsersAPI.getUsers().then((response) => {
+          const dataUsers = response.Usuarios.map((user, index) => {
+            return {
+              name: user.Nombre,
+              email: user.CorreoUsuario,
+              id: user._id,
+              type: USER_TYPE[user.NivelAcceso],
+              searchValue: `${user.Nombre} ${user.CorreoUsuario}`,
+            };
+          });
+          setUsers(dataUsers);
         });
-        setUsers(dataUsers);
-      });
-    };
-    fetchData();
-  }, [deletedID]);
+      };
+      fetchData();
+    }
+  }, [deletedID, user]);
 
   const columns = React.useMemo(
     () => [
