@@ -1,13 +1,5 @@
 import React, { useContext } from 'react';
-import {
-  Row,
-  Form,
-  Container,
-  Card,
-  Col,
-  ListGroup,
-  Button,
-} from 'react-bootstrap';
+import { Row, Form, Container, Card, Col, Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { AppContext } from '../../app/AppContext';
 import UsersAPI from '../Users/users-api';
@@ -40,14 +32,14 @@ const Profile = () => {
           });
           showToast({
             type: 'success',
-            text: 'Perfil modificado correctamente',
+            text: 'Se han modificado con exito',
           });
           history.push('/');
         })
         .catch(() =>
           showToast({
             type: 'error',
-            text: 'Error al modificar perfil',
+            text: 'Error en la actualizacion de datos',
           })
         );
     },

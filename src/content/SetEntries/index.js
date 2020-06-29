@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { showToast } from '../../components/common/Toast';
 import { Formik, Form as Forma } from 'formik';
+import moment from 'moment';
 
 const SetEntries = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -40,15 +41,27 @@ const SetEntries = () => {
   }, [history, user, callApi]);
 
   const handleSubmit = (values) => {
-    EntriesAPI.createEntry({ ...values, Usuario: user.user._id })
+    EntriesAPI.createEntry({
+      ...values,
+      FechaEntrada: values.FechaEntrada
+        ? moment(values.FechaEntrada).format('YYYY/MM/DD')
+        : '',
+      Usuario: user.user._id,
+    })
       .then(() => {
         setShowEntriesModal(false);
         setCallApi(!callApi);
-        showToast({ type: 'success', text: 'Entrada creada con exito' });
+        showToast({
+          type: 'success',
+          text: 'Se ha creado la nueva entrada correctamente',
+        });
         // setShowSetsModal(false);
       })
       .catch(() =>
-        showToast({ type: 'error', text: 'Error al crear la entrada' })
+        showToast({
+          type: 'error',
+          text: 'Error en la creación de nueva entrada',
+        })
       );
   };
 
@@ -71,7 +84,7 @@ const SetEntries = () => {
 
               showToast({
                 type: 'success',
-                text: 'Entrada eliminada correctamente',
+                text: 'Se ha eliminado la entrada con éxito',
               });
             })
             .catch(() => {
@@ -80,7 +93,7 @@ const SetEntries = () => {
 
               showToast({
                 type: 'error',
-                text: 'Hubo un error al intentar eliminar la entrada',
+                text: 'Error en la eliminacion',
               });
             });
         }}
@@ -105,7 +118,7 @@ const SetEntries = () => {
 
               showToast({
                 type: 'success',
-                text: 'Conjunto eliminado correctamente',
+                text: 'Se ha eliminado el conjunto de entrada con éxito',
               });
             })
             .catch(() => {
@@ -115,7 +128,7 @@ const SetEntries = () => {
 
               showToast({
                 type: 'error',
-                text: 'Hubo un error al intentar eliminar el conjunto',
+                text: 'Error en la eliminacion',
               });
             });
         }}
@@ -132,14 +145,26 @@ const SetEntries = () => {
           <Formik
             initialValues={{ NombreConjuntoEntradas: '' }}
             onSubmit={(values) => {
-              console.log(values);
               EntriesAPI.creatSetEntry({
                 ...values,
                 Usuario: user.user._id,
-              }).then(() => {
-                setCallApi(!callApi);
-                setShowSetsModal(false);
-              });
+              })
+                .then(() => {
+                  showToast({
+                    type: 'success',
+                    text: 'Se ha creado el conjunto de entrada con éxito',
+                  });
+                  setCallApi(!callApi);
+                  setShowSetsModal(false);
+                })
+                .catch(() => {
+                  showToast({
+                    type: 'error',
+                    text: 'Error en la creacion del conjunto',
+                  });
+                  setCallApi(!callApi);
+                  setShowSetsModal(false);
+                });
             }}
           >
             {({ values, handleChange }) => (
@@ -453,7 +478,9 @@ const SetEntries = () => {
               TipoEntrada: editedEntry.TipoEntrada,
               IntervaloPaginas: editedEntry.IntervaloPaginas,
               Autores: editedEntry.Autores,
-              FechaEntrada: editedEntry.FechaEntrada,
+              FechaEntrada: editedEntry.FechaEntrada
+                ? moment(editedEntry.FechaEntrada).format('DD/MM/YYYY')
+                : '',
               Revista: editedEntry.Revista,
               Volumen: editedEntry.Volumen,
               NumeroTomo: editedEntry.NumeroTomo,
@@ -462,13 +489,33 @@ const SetEntries = () => {
               Institucion: editedEntry.Institucion,
             }}
             onSubmit={(values) => {
-              EntriesAPI.updateEntry({ ...values }, editedEntry._id).then(
-                () => {
+              EntriesAPI.updateEntry(
+                {
+                  ...values,
+                  FechaEntrada: values.FechaEntrada
+                    ? moment(values.FechaEntrada).format('YYYY/MM/DD')
+                    : '',
+                },
+                editedEntry._id
+              )
+                .then(() => {
+                  showToast({
+                    type: 'success',
+                    text: 'Se ha modificado la entrada con éxito',
+                  });
                   setEditedEntry([]);
                   setCallApi(!callApi);
                   setShowEditModal(false);
-                }
-              );
+                })
+                .catch(() => {
+                  showToast({
+                    type: 'error',
+                    text: 'Error en la modificacion de la entrada',
+                  });
+                  setEditedEntry([]);
+                  setCallApi(!callApi);
+                  setShowEditModal(false);
+                });
             }}
           >
             {({ values, handleChange, resetForm, setFieldValue }) => {
@@ -748,13 +795,22 @@ const SetEntries = () => {
                     EntriesAPI.updateSetEntry(
                       { Entradas: selectedInputs },
                       selectedSet
-                    ).then(() => {
-                      showToast({
-                        type: 'success',
-                        text: 'Conjunto actualizado!',
+                    )
+                      .then(() => {
+                        showToast({
+                          type: 'success',
+                          text:
+                            'Se ha modificado el conjunto de entrada con éxito',
+                        });
+                        setCallApi(!callApi);
+                      })
+                      .catch(() => {
+                        showToast({
+                          type: 'error',
+                          text: 'Error en la modificacion del conjunto',
+                        });
+                        setCallApi(!callApi);
                       });
-                      setCallApi(!callApi);
-                    });
                   }}
                   disabled={!selectedSet}
                 >
@@ -782,7 +838,7 @@ const SetEntries = () => {
                   }}
                 >
                   <div className="container">
-                    <Tab.Container id="left-tabs-example" defaultActiveKey="1">
+                    <Tab.Container id="left-tabs-example">
                       <Nav variant="pills" className="flex-column">
                         {sets.map((set, index) => {
                           return (
@@ -796,6 +852,7 @@ const SetEntries = () => {
                               }}
                             >
                               <Nav.Link
+                                eventKey={index}
                                 style={{
                                   height: '4rem',
                                   border: '1px solid',
@@ -872,6 +929,34 @@ const SetEntries = () => {
                                   <Form.Check
                                     id="defaultChecked"
                                     aria-label="all"
+                                    onChange={(e) => {
+                                      const newInputs = entries
+                                        .filter((entrie) => {
+                                          if (
+                                            entrie.TipoEntrada === 'Publicacion'
+                                          ) {
+                                            return entrie._id;
+                                          } else {
+                                            return false;
+                                          }
+                                        })
+                                        .map((e) => {
+                                          return e._id;
+                                        });
+                                      if (e.target.checked) {
+                                        setSelectedInputs([
+                                          ...selectedInputs,
+                                          ...newInputs,
+                                        ]);
+                                      } else {
+                                        const newNewInputs = selectedInputs.filter(
+                                          function (el) {
+                                            return newInputs.indexOf(el) < 0;
+                                          }
+                                        );
+                                        setSelectedInputs([...newNewInputs]);
+                                      }
+                                    }}
                                   />
                                 </th>
 
@@ -918,7 +1003,12 @@ const SetEntries = () => {
                                     <td>{entrie.NombreEntrada}</td>
                                     <td>{entrie.Autores}</td>
                                     <td>{entrie.Revista}</td>
-                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>
+                                      {entrie.FechaEntrada &&
+                                        moment(entrie?.FechaEntrada).format(
+                                          'DD/MM/YYYY'
+                                        )}
+                                    </td>
                                     <td>{entrie.Volumen}</td>
                                     <td>{entrie.NumeroTomo}</td>
                                     <td>{entrie.IntervaloPaginas}</td>
@@ -960,7 +1050,35 @@ const SetEntries = () => {
                               <tr>
                                 <th scope="col">
                                   {' '}
-                                  <Form.Check aria-label="all" />
+                                  <Form.Check
+                                    aria-label="all"
+                                    onChange={(e) => {
+                                      const newInputs = entries
+                                        .filter((entrie) => {
+                                          if (entrie.TipoEntrada === 'Premio') {
+                                            return entrie._id;
+                                          } else {
+                                            return false;
+                                          }
+                                        })
+                                        .map((e) => {
+                                          return e._id;
+                                        });
+                                      if (e.target.checked) {
+                                        setSelectedInputs([
+                                          ...selectedInputs,
+                                          ...newInputs,
+                                        ]);
+                                      } else {
+                                        const newNewInputs = selectedInputs.filter(
+                                          function (el) {
+                                            return newInputs.indexOf(el) < 0;
+                                          }
+                                        );
+                                        setSelectedInputs([...newNewInputs]);
+                                      }
+                                    }}
+                                  />
                                 </th>
                                 <th scope="col">Premio</th>
                                 <th scope="col">Fecha</th>
@@ -999,7 +1117,11 @@ const SetEntries = () => {
                                       />
                                     </th>
                                     <td>{entrie.NombreEntrada}</td>
-                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>
+                                      {moment(entrie.FechaEntrada).format(
+                                        'DD/MM/YYYY'
+                                      )}
+                                    </td>
                                     <td>{entrie.Categoria}</td>
                                     <td>{entrie.LugarObtenido}</td>
                                     <td>{entrie.Institucion}</td>
@@ -1042,7 +1164,37 @@ const SetEntries = () => {
                               <tr>
                                 <th scope="col">
                                   {' '}
-                                  <Form.Check aria-label="all" />
+                                  <Form.Check
+                                    aria-label="all"
+                                    onChange={(e) => {
+                                      const newInputs = entries
+                                        .filter((entrie) => {
+                                          if (
+                                            entrie.TipoEntrada === 'Conferencia'
+                                          ) {
+                                            return entrie._id;
+                                          } else {
+                                            return false;
+                                          }
+                                        })
+                                        .map((e) => {
+                                          return e._id;
+                                        });
+                                      if (e.target.checked) {
+                                        setSelectedInputs([
+                                          ...selectedInputs,
+                                          ...newInputs,
+                                        ]);
+                                      } else {
+                                        const newNewInputs = selectedInputs.filter(
+                                          function (el) {
+                                            return newInputs.indexOf(el) < 0;
+                                          }
+                                        );
+                                        setSelectedInputs([...newNewInputs]);
+                                      }
+                                    }}
+                                  />
                                 </th>
                                 <th scope="col">Nombre conferencia</th>
                                 <th scope="col">Autores</th>
@@ -1083,7 +1235,12 @@ const SetEntries = () => {
                                     <td>{entrie.NombreEntrada}</td>
                                     <td>{entrie.Autores}</td>
                                     <td>{entrie.IntervaloPagina}</td>
-                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>
+                                      {entrie.FechaEntrada &&
+                                        moment(entrie?.FechaEntrada).format(
+                                          'DD/MM/YYYY'
+                                        )}
+                                    </td>
                                     <td>
                                       <FontAwesomeIcon
                                         icon={faTrashAlt}
@@ -1123,7 +1280,37 @@ const SetEntries = () => {
                               <tr>
                                 <th scope="col">
                                   {' '}
-                                  <Form.Check aria-label="all" />
+                                  <Form.Check
+                                    aria-label="all"
+                                    onChange={(e) => {
+                                      const newInputs = entries
+                                        .filter((entrie) => {
+                                          if (
+                                            entrie.TipoEntrada === 'Concurso'
+                                          ) {
+                                            return entrie._id;
+                                          } else {
+                                            return false;
+                                          }
+                                        })
+                                        .map((e) => {
+                                          return e._id;
+                                        });
+                                      if (e.target.checked) {
+                                        setSelectedInputs([
+                                          ...selectedInputs,
+                                          ...newInputs,
+                                        ]);
+                                      } else {
+                                        const newNewInputs = selectedInputs.filter(
+                                          function (el) {
+                                            return newInputs.indexOf(el) < 0;
+                                          }
+                                        );
+                                        setSelectedInputs([...newNewInputs]);
+                                      }
+                                    }}
+                                  />
                                 </th>
                                 <th scope="col">Concurso</th>
                                 <th scope="col">Fecha</th>
@@ -1162,7 +1349,12 @@ const SetEntries = () => {
                                       />
                                     </th>
                                     <td>{entrie.NombreEntrada}</td>
-                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>
+                                      {entrie.FechaEntrada &&
+                                        moment(entrie?.FechaEntrada).format(
+                                          'DD/MM/YYYY'
+                                        )}
+                                    </td>
                                     <td>{entrie.Categoria}</td>
                                     <td>{entrie.IntervaloPagina}</td>
                                     <td>
