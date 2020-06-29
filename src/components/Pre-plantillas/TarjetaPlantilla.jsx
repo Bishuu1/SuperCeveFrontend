@@ -56,7 +56,7 @@ const TarjetaPlantilla = (props) => {
                 <button
                   type="button"
                   class="btn btn-success text-dark btn-sm mr-1"
-                  title="Editar"
+                  title="Agregar plantilla"
                   onClick={() => props.ChangeTipoPlantilla(props.tipo)}
                 >
                   <FontAwesomeIcon icon={faPlus} />

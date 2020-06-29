@@ -1,4 +1,5 @@
 import React from 'react'
+import Moment from 'react-moment';
 import { Fragment, useState } from 'react';
 const EntradaTipo = (props) => {
     return (  
@@ -8,34 +9,47 @@ const EntradaTipo = (props) => {
                     {props.nombre}
                 </div>
                 <div className="ml-1" style={{fontSize:"7px"}}>
-                    {(props.tipo === "Publicación")? 
-                        <>{props.fecha}
-                        {( props.fecha)? <>, {props.revista}</>: props.revista}
-                        {( props.fecha !== null || props.revista !== null )? <>, Tomo {props.tomo}</>:<>Tomo{props.tomo}</>}
-                        {( props.fecha !== null || props.revista !== null || props.tomo !== null  )?
-                                                    <>, Vol.{props.volumen}</>: <>Vol.{props.volumen}</>}
-                        {( props.fecha !== null || props.revista !== null || props.tomo !== null 
-                                                || props.volumen !== null)?
-                                                    <>, paginas {props.intervalo}</>: <>paginas {props.intervalo}</>}
-                        {( props.fecha !== null || props.revista !== null || props.tomo !== null 
-                                                || props.volumen !== null || props.fecha !== null)?
+                    {(props.tipo === "Publicacion")? 
+                        <>{(props.fecha !== null)? 
+                            <Moment format="D MMM YYYY" withTitle>
+                            {props.fecha}</Moment>:""}
+                        {(( props.fecha!= null) && (props.revista !== ""))? <>, {props.revista}</>: props.revista}
+                        {(( props.fecha !== null || props.revista !== "" )&& (props.tomo !== null) )? <>, Tomo {props.tomo}</>:
+                                                    <>{(props.tomo !== null)? 'Tomo.': '' }{props.tomo}</>}
+                        {(( props.fecha !== null || props.revista !== "" || props.tomo !== null  ) && (props.volumen !== null))?
+                                                    <>, Vol.{props.volumen}</>: <> {(props.volumen !== null)? 'Vol.': '' }{props.volumen}</>}
+                        {(( props.fecha !== null || props.revista !== "" || props.tomo !== null 
+                                                || props.volumen !== null)&& (props.intervalo !== ""))?
+                                                    <>, paginas {props.intervalo}</>: <>{(props.intervalo !== "")? 'paginas':''}{props.intervalo}</>}
+                        {(( props.fecha !== null || props.revista !== "" || props.tomo !== null 
+                                                || props.volumen !== null || props.fecha !== null)&&(props.autores !== ""))?
                                                     <>, {props.autores}</>: <>{props.autores}</>}
                         </>:''}
                     {(props.tipo === "Conferencia")? 
-                        <>{props.fecha}
-                        {( props.fecha)? <>, paginas {props.intervalo}</>: <>paginas {props.intervalo}</>} 
-                        {( props.fecha !== null || props.intervalo !== null )? <>, {props.autores}</>: props.autores}
+                        <>{(props.fecha !== null)? 
+                        <Moment format="D MMM YYYY" withTitle>
+                        {props.fecha}</Moment>:""}
+                        {(( props.fecha !== null) && props.intervalo !== "")? <>, paginas {props.intervalo}</>: <> 
+                        {(props.intervalo !== "")? 'Paginas ' : ''}{props.intervalo}</>} 
+                        {(( props.fecha !== null || props.intervalo !== "" )&& (props.autores !== ""))? <>, {props.autores}</>: props.autores}
                         </>:''}
                     {(props.tipo === "Concurso")? 
                         <>{props.institucion}
-                        {( props.institucion)? <>, {props.categoria}</>: props.categoria}
-                        {( props.institucion !== null || props.categoria != null )? <>, {props.fecha}</>: props.fecha}
+                        {(( props.institucion !=="")&&(props.categoria !== ""))? <>, {props.categoria}</>: props.categoria}
+                        {(( props.institucion !== "" || props.categoria !== "" )&& (props.fecha !== null))? 
+                        <>, <Moment format="D MMM YYYY" withTitle>{props.fecha}</Moment>
+                        </>:<>{(props.fecha !== null)? <Moment format="D MMM YYYY" withTitle>
+                            {props.fecha}</Moment>:''}</>}
                         </>:''}
                     {(props.tipo === "Premio")? 
                         <>{props.institucion}
-                        {( props.institucion)? <>, {props.categoria}</>: props.categoria}
-                        {( props.institucion !== null || props.categoria != null )? <>, {props.fecha}</>: props.fecha}
-                        {( props.institucion !== null || props.categoria != null || props.fecha != null  )?
+                        {( props.institucion !== "" && props.categoria !=="")? <>, {props.categoria}</>: props.categoria}
+                        {(( props.institucion !== "" || props.categoria !== "" )&& (props.fecha!== null)) ? <>, 
+                        <Moment format="D MMM YYYY" withTitle>
+                            {props.fecha}</Moment>
+                        </>: <>{(props.fecha !== null)? <Moment format="D MMM YYYY" withTitle>
+                            {props.fecha}</Moment>:''}</>}
+                        {(( props.institucion !== "" || props.categoria !== "" || props.fecha !== null  ) && (props.lugar !==""))?
                                                     <>, {props.lugar}</>: props.lugar}
                         </>:''}
 

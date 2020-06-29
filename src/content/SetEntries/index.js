@@ -11,6 +11,7 @@ import { showToast } from '../../components/common/Toast';
 import { Formik, Form as Forma } from 'formik';
 import moment from 'moment';
 
+import Moment from 'react-moment';
 const SetEntries = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteSetsModal, setShowDeleteSetsModal] = useState(false);
@@ -1004,10 +1005,13 @@ const SetEntries = () => {
                                     <td>{entrie.Autores}</td>
                                     <td>{entrie.Revista}</td>
                                     <td>
-                                      {entrie.FechaEntrada &&
-                                        moment(entrie?.FechaEntrada).format(
-                                          'DD/MM/YYYY'
-                                        )}
+                                      {entrie.FechaEntrada !== null ? (
+                                        <Moment format="D MMM YYYY" withTitle>
+                                          {entrie.FechaEntrada}
+                                        </Moment>
+                                      ) : (
+                                        'Sin fecha'
+                                      )}
                                     </td>
                                     <td>{entrie.Volumen}</td>
                                     <td>{entrie.NumeroTomo}</td>
@@ -1118,8 +1122,12 @@ const SetEntries = () => {
                                     </th>
                                     <td>{entrie.NombreEntrada}</td>
                                     <td>
-                                      {moment(entrie.FechaEntrada).format(
-                                        'DD/MM/YYYY'
+                                      {entrie.FechaEntrada !== null ? (
+                                        <Moment format="D MMM YYYY" withTitle>
+                                          {entrie.FechaEntrada}
+                                        </Moment>
+                                      ) : (
+                                        'Sin fecha'
                                       )}
                                     </td>
                                     <td>{entrie.Categoria}</td>
@@ -1236,10 +1244,13 @@ const SetEntries = () => {
                                     <td>{entrie.Autores}</td>
                                     <td>{entrie.IntervaloPagina}</td>
                                     <td>
-                                      {entrie.FechaEntrada &&
-                                        moment(entrie?.FechaEntrada).format(
-                                          'DD/MM/YYYY'
-                                        )}
+                                      {entrie.FechaEntrada !== null ? (
+                                        <Moment format="D MMM YYYY" withTitle>
+                                          {entrie.FechaEntrada}
+                                        </Moment>
+                                      ) : (
+                                        'Sin fecha'
+                                      )}
                                     </td>
                                     <td>
                                       <FontAwesomeIcon
@@ -1350,10 +1361,13 @@ const SetEntries = () => {
                                     </th>
                                     <td>{entrie.NombreEntrada}</td>
                                     <td>
-                                      {entrie.FechaEntrada &&
-                                        moment(entrie?.FechaEntrada).format(
-                                          'DD/MM/YYYY'
-                                        )}
+                                      {entrie.FechaEntrada !== null ? (
+                                        <Moment format="D MMM YYYY" withTitle>
+                                          {entrie.FechaEntrada}
+                                        </Moment>
+                                      ) : (
+                                        'Sin fecha'
+                                      )}
                                     </td>
                                     <td>{entrie.Categoria}</td>
                                     <td>{entrie.IntervaloPagina}</td>
