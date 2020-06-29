@@ -3,7 +3,7 @@ import Profile from '../content/Profile';
 import Curriculum from '../content/Curriculum';
 import SetEntries from '../content/SetEntries';
 import Users from '../content/Users';
-import Entradas from '../content/Entradas';
+import Plantillas from '../content/Plantillas';
 import AddUser from '../content/Users/AddUser';
 import EditUser from '../content/Users/EditUser';
 import Login from '../content/Login';
@@ -50,10 +50,10 @@ const routes = [
   },
 
   {
-    path: '/entradas',
-    component: Entradas,
+    path: '/plantillas',
+    component: Plantillas,
     exact: true,
-    title: 'Entradas',
+    title: 'Plantillas',
   },
 ];
 
