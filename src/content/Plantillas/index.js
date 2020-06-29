@@ -178,6 +178,9 @@ const Plantillas = () => {
   const [plantillasDB, setPlantillasDB] = useState([]); //Plantillas de la BD
 
   useEffect(() => {
+    user?.user.NivelAcceso === 1 && history.push('/');
+  }, [history, user]);
+  useEffect(() => {
     ObtenerDatos();
     ObtenerDatosConjuntos();
   }, [update]);

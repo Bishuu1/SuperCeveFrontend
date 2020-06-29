@@ -44,6 +44,11 @@ const PrivateLayout = ({ children }) => {
                   Conjunto de entrada
                 </Nav.Link>
               )}
+              {user.user.NivelAcceso === 3 && (
+                <Nav.Link onClick={() => history.push('/plantillas')}>
+                  Plantillas
+                </Nav.Link>
+              )}
               {user.user.NivelAcceso === 1 && (
                 <Nav.Link onClick={() => history.push('/usuarios')}>
                   Usuarios
