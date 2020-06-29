@@ -83,7 +83,6 @@ const Users = () => {
     <Container fluid>
       <ConfirmModal
         title="Eliminar usuario"
-        text="Esta seguro que quiere eliminar el usuario?"
         buttonText="Eliminar"
         showModal={showModal}
         onCloseModal={() => {
@@ -107,7 +106,9 @@ const Users = () => {
               });
             });
         }}
-      />
+      >
+        Esta seguro que quiere eliminar el usuario?
+      </ConfirmModal>
       <Row>
         <Col sm={12}>
           <h1>Administracion de usuarios</h1>

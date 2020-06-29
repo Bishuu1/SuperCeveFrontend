@@ -3,11 +3,12 @@ import { Modal, Button } from 'react-bootstrap';
 
 const ConfirmModal = ({
   title,
-  text,
+  children,
   buttonText,
   showModal,
   onCloseModal,
   onSaveModal,
+  buttonSubmit,
 }) => {
   return (
     <>
@@ -18,18 +19,25 @@ const ConfirmModal = ({
         centered
         backdrop="static"
         keyboard={false}
+        animation={false}
       >
         <Modal.Header closeButton>
           <Modal.Title>{title}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{text}</Modal.Body>
+        <Modal.Body>{children}</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={onCloseModal}>
-            Close
+            Cerrar
           </Button>
-          <Button variant="primary" onClick={onSaveModal}>
-            {buttonText}
-          </Button>
+          {onSaveModal && (
+            <Button
+              variant="primary"
+              type={onSaveModal ? 'button' : 'submit'}
+              onClick={onSaveModal}
+            >
+              {buttonText}
+            </Button>
+          )}
         </Modal.Footer>
       </Modal>
     </>

@@ -1,134 +1,779 @@
 import React, { useContext } from 'react';
-import {
-  Button,
-  Tab,
-  Nav,
-  Form,
-  Row,
-  Col,
-  Modal,
-  Container,
-} from 'react-bootstrap';
-import ConfirmModal from '../../components/common/Modal';
+import { Button, Tab, Nav, Form, Container, Col, Row } from 'react-bootstrap';
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { AppContext } from '../../app/AppContext';
+import Modal from '../../components/common/Modal';
+import EntriesAPI from './entries-api';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
+import { showToast } from '../../components/common/Toast';
+import { Formik, Form as Forma } from 'formik';
 
 const SetEntries = () => {
-  const [show, setShow] = useState([]);
-  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteSetsModal, setShowDeleteSetsModal] = useState(false);
+  const [showEntriesModal, setShowEntriesModal] = useState(false);
+  const [showSetsModal, setShowSetsModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [entries, setEntries] = useState([]);
+  const [deletedID, setDeletedID] = useState(undefined);
+  const [deletedSetID, setDeletedSetID] = useState(undefined);
+  const [editedEntry, setEditedEntry] = useState([]);
+  const [selectedSet, setSelectedSet] = useState(undefined);
+  const [selectedInputs, setSelectedInputs] = useState([]);
+  const [sets, setSets] = useState([]);
+  const [callApi, setCallApi] = useState(false);
 
-  const [modalShow, setModalShow] = useState(false); // estare repitiendo variable ? si
   const { user } = useContext(AppContext);
   const history = useHistory();
   useEffect(() => {
+    EntriesAPI.getEntries(user.user._id).then((response) =>
+      setEntries(response.Entradas)
+    );
+
+    EntriesAPI.getSetEntries(user.user._id).then((response) => {
+      setSets(response.Conjuntos);
+      console.log(response.Conjuntos);
+    });
     user?.NivelAcceso === 1 && history.push('/');
-  }, [history, user]);
+  }, [history, user, callApi]);
 
-  function ModalAgregarConjunto(props) {
-    return (
-      <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Agregar conjunto
-          </Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body className="show-grid">
-          <Container>
-            <Form>
-              <Form.Group controlId="exampleForm.ControlInput1">
-                <Form.Label>Nombre del conjunto</Form.Label>
-                <Form.Control placeholder="Ingresar nombre" />
-              </Form.Group>
-            </Form>
-          </Container>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={props.onHide}>
-            Cerrar
-          </Button>
-          <Button onClick={props.onHide}>Agregar</Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
-
-  function ModalAgregarEntrada(props) {
-    return (
-      <Modal {...props} aria-labelledby="contained-modal-title-vcenter">
-        <Modal.Header closeButton>
-          <Modal.Title id="contained-modal-title-vcenter">
-            Agregar Entrada
-          </Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body className="show-grid">
-          <Container>
-            <Form.Group id="tipos" onChange="mostrar(this.value)">
-              <Form.Label>Tipo de entrada</Form.Label>
-              <Form.Control as="select" onChange="">
-                <option value="publicacion">Publicación</option>
-                <option value="premio">Premio</option>
-                <option value="conferencia">Conferencia</option>
-                <option value="concurso">Concurso</option>
-              </Form.Control>
-            </Form.Group>
-
-            <Form.Group id="fecha">
-              <Form.Label>fecha</Form.Label>
-              <Form.Control placeholder="fecha" />
-            </Form.Group>
-          </Container>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button variant="secondary" onClick={props.onHide}>
-            Cerrar
-          </Button>
-          <Button onClick={props.onHide}>Agregar</Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  }
+  const handleSubmit = (values) => {
+    EntriesAPI.createEntry({ ...values, Usuario: user.user._id })
+      .then(() => {
+        setShowEntriesModal(false);
+        setCallApi(!callApi);
+        showToast({ type: 'success', text: 'Entrada creada con exito' });
+        // setShowSetsModal(false);
+      })
+      .catch(() =>
+        showToast({ type: 'error', text: 'Error al crear la entrada' })
+      );
+  };
 
   return (
     <>
-      <ConfirmModal
+      <Modal
         title="Eliminar Entrada"
-        text="¿Esta seguro que quiere eliminar la entrada?"
         buttonText="Eliminar"
-        showModal={showModal}
-        onCloseModal={() => setShowModal(false)}
-      />
+        showModal={showDeleteModal}
+        onCloseModal={() => {
+          setDeletedID(undefined);
+          setShowDeleteModal(false);
+        }}
+        onSaveModal={() => {
+          EntriesAPI.deleteEntrie(deletedID)
+            .then(() => {
+              setDeletedID(undefined);
+              setShowDeleteModal(false);
+              setCallApi(!callApi);
 
-      <div class="container-fluid mt-2 mt-4">
-        <div class="row">
-          <div class="col-md-3 col-sm-5">
-            <div class="card">
-              <div class="card-header text-center bg-dark">
-                <h6 class="text-white mt-1">
+              showToast({
+                type: 'success',
+                text: 'Entrada eliminada correctamente',
+              });
+            })
+            .catch(() => {
+              setDeletedID(undefined);
+              setShowDeleteModal(false);
+
+              showToast({
+                type: 'error',
+                text: 'Hubo un error al intentar eliminar la entrada',
+              });
+            });
+        }}
+      >
+        ¿Esta seguro que quiere eliminar la entrada?
+      </Modal>
+      <Modal
+        title="Eliminar conjunto"
+        buttonText="Eliminar"
+        showModal={showDeleteSetsModal}
+        onCloseModal={() => {
+          setDeletedSetID(undefined);
+          setShowDeleteSetsModal(false);
+        }}
+        onSaveModal={() => {
+          EntriesAPI.deleteSetEntry(deletedSetID)
+            .then(() => {
+              setDeletedSetID(undefined);
+              setSelectedSet(undefined);
+              setShowDeleteSetsModal(false);
+              setCallApi(!callApi);
+
+              showToast({
+                type: 'success',
+                text: 'Conjunto eliminado correctamente',
+              });
+            })
+            .catch(() => {
+              setDeletedSetID(undefined);
+              setSelectedSet(undefined);
+              setShowDeleteSetsModal(false);
+
+              showToast({
+                type: 'error',
+                text: 'Hubo un error al intentar eliminar el conjunto',
+              });
+            });
+        }}
+      >
+        ¿Esta seguro que quiere eliminar el conjunto?
+      </Modal>
+      <Modal
+        title="Agregar conjunto"
+        buttonText="Agregar"
+        onCloseModal={() => setShowSetsModal(false)}
+        showModal={showSetsModal}
+      >
+        <Container>
+          <Formik
+            initialValues={{ NombreConjuntoEntradas: '' }}
+            onSubmit={(values) => {
+              console.log(values);
+              EntriesAPI.creatSetEntry({
+                ...values,
+                Usuario: user.user._id,
+              }).then(() => {
+                setCallApi(!callApi);
+                setShowSetsModal(false);
+              });
+            }}
+          >
+            {({ values, handleChange }) => (
+              <Forma>
+                <Form.Group controlId="exampleForm.ControlInput1">
+                  <Form.Label>Nombre del conjunto</Form.Label>
+                  <Form.Control
+                    placeholder="Ingresar nombre"
+                    name="NombreConjuntoEntradas"
+                    value={values.NombreConjuntoEntradas}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+
+                <Row>
+                  <Col>
+                    <Button type="submit">Guardar</Button>
+                  </Col>
+                </Row>
+              </Forma>
+            )}
+          </Formik>
+        </Container>
+      </Modal>
+      <Modal
+        title="Agregar Entradas"
+        buttonText="Agregar"
+        onCloseModal={() => setShowEntriesModal(false)}
+        showModal={showEntriesModal}
+      >
+        <Container>
+          <Formik
+            initialValues={{
+              NombreEntrada: '',
+              TipoEntrada: '',
+              IntervaloPaginas: '',
+              Autores: '',
+              FechaEntrada: '',
+              Revista: '',
+              Volumen: '',
+              NumeroTomo: '',
+              Categoria: '',
+              LugarObtenido: '',
+              Institucion: '',
+            }}
+            onSubmit={handleSubmit}
+          >
+            {({ values, handleChange, resetForm, setFieldValue }) => {
+              return (
+                <Forma
+                  onChange={(e) => {
+                    if (e.target.name === 'TipoEntrada') {
+                      resetForm({});
+                      setFieldValue('TipoEntrada', e.target.value);
+                    }
+                  }}
+                >
+                  <Form.Group id="tipos">
+                    <Form.Label>Tipo de entrada</Form.Label>
+                    <Form.Control
+                      as="select"
+                      name="TipoEntrada"
+                      value={values.TipoEntrada}
+                      onChange={handleChange}
+                    >
+                      <option value="">Seleccione</option>
+                      <option value="Publicacion">Publicación</option>
+                      <option value="Premio">Premio</option>
+                      <option value="Conferencia">Conferencia</option>
+                      <option value="Concurso">Concurso</option>
+                    </Form.Control>
+                  </Form.Group>
+                  {values.TipoEntrada === 'Publicacion' && (
+                    <>
+                      <Form.Group>
+                        <Form.Label>Titulo</Form.Label>
+                        <Form.Control
+                          name="NombreEntrada"
+                          value={values.NombreEntrada}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Autores</Form.Label>
+                            <Form.Control
+                              name="Autores"
+                              value={values.Autores}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Fecha</Form.Label>
+                            <Form.Control
+                              name="FechaEntrada"
+                              value={values.FechaEntrada}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Revista</Form.Label>
+                            <Form.Control
+                              name="Revista"
+                              value={values.Revista}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Volumen</Form.Label>
+                            <Form.Control
+                              name="Volumen"
+                              value={values.Volumen}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Tomo</Form.Label>
+                            <Form.Control
+                              name="NumeroTomo"
+                              value={values.NumeroTomo}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Intervalo página</Form.Label>
+                            <Form.Control
+                              name="IntervaloPaginas"
+                              value={values.IntervaloPaginas}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </>
+                  )}
+                  {values.TipoEntrada === 'Premio' && (
+                    <>
+                      <Form.Group>
+                        <Form.Label>Nombre del premio</Form.Label>
+                        <Form.Control
+                          name="NombreEntrada"
+                          value={values.NombreEntrada}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Fecha</Form.Label>
+                            <Form.Control
+                              name="FechaEntrada"
+                              value={values.FechaEntrada}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Lugar obtenido</Form.Label>
+                            <Form.Control
+                              name="LugarObtenido"
+                              value={values.LugarObtenido}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Form.Group>
+                        <Form.Label>Categoria</Form.Label>
+                        <Form.Control
+                          name="Categoria"
+                          value={values.Categoria}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label>Institucion</Form.Label>
+                        <Form.Control
+                          name="Institucion"
+                          value={values.Institucion}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                    </>
+                  )}
+                  {values.TipoEntrada === 'Conferencia' && (
+                    <>
+                      <Form.Group>
+                        <Form.Label>Nombre de la conferencia</Form.Label>
+                        <Form.Control
+                          name="NombreEntrada"
+                          value={values.NombreEntrada}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Fecha</Form.Label>
+                            <Form.Control
+                              name="FechaEntrada"
+                              value={values.FechaEntrada}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Intervalo paginas</Form.Label>
+                            <Form.Control
+                              name="IntervaloPaginas"
+                              value={values.IntervaloPaginas}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Form.Group>
+                        <Form.Label>Autores</Form.Label>
+                        <Form.Control
+                          name="Autores"
+                          value={values.Autores}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                    </>
+                  )}
+                  {values.TipoEntrada === 'Concurso' && (
+                    <>
+                      <Form.Group>
+                        <Form.Label>Concurso</Form.Label>
+                        <Form.Control
+                          name="NombreEntrada"
+                          value={values.NombreEntrada}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Fecha</Form.Label>
+                            <Form.Control
+                              name="FechaEntrada"
+                              value={values.FechaEntrada}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Intervalo paginas</Form.Label>
+                            <Form.Control
+                              name="IntervaloPaginas"
+                              value={values.IntervaloPaginas}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Form.Group>
+                        <Form.Label>Categoria</Form.Label>
+                        <Form.Control
+                          name="Categoria"
+                          value={values.Categoria}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                    </>
+                  )}
+                  {values.TipoEntrada && (
+                    <Row>
+                      <Col>
+                        <Button type="submit">Guardar</Button>
+                      </Col>
+                    </Row>
+                  )}
+                </Forma>
+              );
+            }}
+          </Formik>
+        </Container>
+      </Modal>
+      <Modal
+        title="Modificar Entrada"
+        buttonText="Agregar"
+        showModal={showEditModal}
+        onCloseModal={() => {
+          setEditedEntry([]);
+          setShowEditModal(false);
+        }}
+      >
+        <Container>
+          <Formik
+            initialValues={{
+              NombreEntrada: editedEntry.NombreEntrada,
+              TipoEntrada: editedEntry.TipoEntrada,
+              IntervaloPaginas: editedEntry.IntervaloPaginas,
+              Autores: editedEntry.Autores,
+              FechaEntrada: editedEntry.FechaEntrada,
+              Revista: editedEntry.Revista,
+              Volumen: editedEntry.Volumen,
+              NumeroTomo: editedEntry.NumeroTomo,
+              Categoria: editedEntry.Categoria,
+              LugarObtenido: editedEntry.LugarObtenido,
+              Institucion: editedEntry.Institucion,
+            }}
+            onSubmit={(values) => {
+              EntriesAPI.updateEntry({ ...values }, editedEntry._id).then(
+                () => {
+                  setEditedEntry([]);
+                  setCallApi(!callApi);
+                  setShowEditModal(false);
+                }
+              );
+            }}
+          >
+            {({ values, handleChange, resetForm, setFieldValue }) => {
+              return (
+                <Forma
+                  onChange={(e) => {
+                    if (e.target.name === 'TipoEntrada') {
+                      resetForm({});
+                      setFieldValue('TipoEntrada', e.target.value);
+                    }
+                  }}
+                >
+                  <Form.Group id="tipos">
+                    <Form.Label>Tipo de entrada</Form.Label>
+                    <Form.Control
+                      as="select"
+                      name="TipoEntrada"
+                      value={values.TipoEntrada}
+                      onChange={handleChange}
+                      disabled={true}
+                    >
+                      <option value="">Seleccione</option>
+                      <option value="Publicacion">Publicación</option>
+                      <option value="Premio">Premio</option>
+                      <option value="Conferencia">Conferencia</option>
+                      <option value="Concurso">Concurso</option>
+                    </Form.Control>
+                  </Form.Group>
+                  {values.TipoEntrada === 'Publicacion' && (
+                    <>
+                      <Form.Group>
+                        <Form.Label>Titulo</Form.Label>
+                        <Form.Control
+                          name="NombreEntrada"
+                          value={values.NombreEntrada}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Autores</Form.Label>
+                            <Form.Control
+                              name="Autores"
+                              value={values.Autores}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Fecha</Form.Label>
+                            <Form.Control
+                              name="FechaEntrada"
+                              value={values.FechaEntrada}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Revista</Form.Label>
+                            <Form.Control
+                              name="Revista"
+                              value={values.Revista}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Volumen</Form.Label>
+                            <Form.Control
+                              name="Volumen"
+                              value={values.Volumen}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Tomo</Form.Label>
+                            <Form.Control
+                              name="NumeroTomo"
+                              value={values.NumeroTomo}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Intervalo página</Form.Label>
+                            <Form.Control
+                              name="IntervaloPaginas"
+                              value={values.IntervaloPaginas}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                    </>
+                  )}
+                  {values.TipoEntrada === 'Premio' && (
+                    <>
+                      <Form.Group>
+                        <Form.Label>Nombre del premio</Form.Label>
+                        <Form.Control
+                          name="NombreEntrada"
+                          value={values.NombreEntrada}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Fecha</Form.Label>
+                            <Form.Control
+                              name="FechaEntrada"
+                              value={values.FechaEntrada}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Lugar obtenido</Form.Label>
+                            <Form.Control
+                              name="LugarObtenido"
+                              value={values.LugarObtenido}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Form.Group>
+                        <Form.Label>Categoria</Form.Label>
+                        <Form.Control
+                          name="Categoria"
+                          value={values.Categoria}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Form.Group>
+                        <Form.Label>Institucion</Form.Label>
+                        <Form.Control
+                          name="Institucion"
+                          value={values.Institucion}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                    </>
+                  )}
+                  {values.TipoEntrada === 'Conferencia' && (
+                    <>
+                      <Form.Group>
+                        <Form.Label>Nombre de la conferencia</Form.Label>
+                        <Form.Control
+                          name="NombreEntrada"
+                          value={values.NombreEntrada}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Fecha</Form.Label>
+                            <Form.Control
+                              name="FechaEntrada"
+                              value={values.FechaEntrada}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Intervalo paginas</Form.Label>
+                            <Form.Control
+                              name="IntervaloPaginas"
+                              value={values.IntervaloPaginas}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Form.Group>
+                        <Form.Label>Autores</Form.Label>
+                        <Form.Control
+                          name="Autores"
+                          value={values.Autores}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                    </>
+                  )}
+                  {values.TipoEntrada === 'Concurso' && (
+                    <>
+                      <Form.Group>
+                        <Form.Label>Concurso</Form.Label>
+                        <Form.Control
+                          name="NombreEntrada"
+                          value={values.NombreEntrada}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                      <Row>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Fecha</Form.Label>
+                            <Form.Control
+                              name="FechaEntrada"
+                              value={values.FechaEntrada}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                        <Col>
+                          <Form.Group>
+                            <Form.Label>Intervalo paginas</Form.Label>
+                            <Form.Control
+                              name="IntervaloPaginas"
+                              value={values.IntervaloPaginas}
+                              onChange={handleChange}
+                            />
+                          </Form.Group>
+                        </Col>
+                      </Row>
+                      <Form.Group>
+                        <Form.Label>Categoria</Form.Label>
+                        <Form.Control
+                          name="Categoria"
+                          value={values.Categoria}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                    </>
+                  )}
+                  {values.TipoEntrada && (
+                    <Row>
+                      <Col>
+                        <Button type="submit">Guardar</Button>
+                      </Col>
+                    </Row>
+                  )}
+                </Forma>
+              );
+            }}
+          </Formik>
+        </Container>
+      </Modal>
+
+      <div className="container-fluid mt-2 mt-4">
+        <div className="row">
+          <div className="col-md-3 col-sm-5">
+            <div className="card">
+              <div className="card-header text-center bg-dark">
+                <h6 className="text-white mt-1">
                   <strong>Conjunto de entradas</strong>
                 </h6>
 
                 <Button
                   variant="success"
                   style={{ padding: '5px 16px' }}
-                  onClick={() => setModalShow(true)}
+                  onClick={() => setShowSetsModal(true)}
                 >
                   Agregar conjunto
                 </Button>
-
-                <ModalAgregarConjunto
-                  show={modalShow}
-                  onHide={() => setModalShow(false)}
-                />
+                <Button
+                  variant="primary"
+                  className="mt-2"
+                  title="Actualizar entradas"
+                  style={{ padding: '5px 16px' }}
+                  onClick={() => {
+                    EntriesAPI.updateSetEntry(
+                      { Entradas: selectedInputs },
+                      selectedSet
+                    ).then(() => {
+                      showToast({
+                        type: 'success',
+                        text: 'Conjunto actualizado!',
+                      });
+                      setCallApi(!callApi);
+                    });
+                  }}
+                  disabled={!selectedSet}
+                >
+                  Actualizar conjunto
+                </Button>
+                <Button
+                  variant="danger"
+                  className="mt-2"
+                  style={{ padding: '5px 16px' }}
+                  onClick={() => setShowDeleteSetsModal(true)}
+                  disabled={!deletedSetID}
+                >
+                  Eliminar conjunto
+                </Button>
               </div>
 
-              <div class="table-responsive">
+              <div className="table-responsive">
                 <div
-                  class="table-wrapper-scroll-y mb-3"
+                  className="table-wrapper-scroll-y mb-3"
                   style={{
                     position: 'relative',
                     height: '400px',
@@ -136,53 +781,34 @@ const SetEntries = () => {
                     overflow: 'auto',
                   }}
                 >
-                  <div class="container">
+                  <div className="container">
                     <Tab.Container id="left-tabs-example" defaultActiveKey="1">
                       <Nav variant="pills" className="flex-column">
-                        <Nav.Item>
-                          <Nav.Link
-                            style={{
-                              height: '4rem',
-                              border: '1px solid',
-                              borderColor: 'rgba(0, 0, 0, 0.125)',
-                              marginTop: '12px',
-                              marginBottom: '12px',
-                            }}
-                            eventKey="1"
-                          >
-                            Conjunto de entrada 1
-                          </Nav.Link>
-                        </Nav.Item>
-
-                        <Nav.Item class="card bg-light">
-                          <Nav.Link
-                            style={{
-                              height: '4rem',
-                              border: '1px solid',
-                              borderColor: 'rgba(0, 0, 0, 0.125)',
-                              marginTop: '12px',
-                              marginBottom: '12px',
-                            }}
-                            eventKey="2"
-                          >
-                            conjunto de entrada 2
-                          </Nav.Link>
-                        </Nav.Item>
-
-                        <Nav.Item class="card bg-light">
-                          <Nav.Link
-                            style={{
-                              height: '4rem',
-                              border: '1px solid',
-                              borderColor: 'rgba(0, 0, 0, 0.125)',
-                              marginTop: '12px',
-                              marginBottom: '12px',
-                            }}
-                            eventKey="3"
-                          >
-                            conjunto de entrada 3
-                          </Nav.Link>
-                        </Nav.Item>
+                        {sets.map((set, index) => {
+                          return (
+                            <Nav.Item
+                              key={index}
+                              onClick={() => {
+                                console.log(set);
+                                setSelectedSet(set._id);
+                                setDeletedSetID(set._id);
+                                setSelectedInputs(set.Entradas);
+                              }}
+                            >
+                              <Nav.Link
+                                style={{
+                                  height: '4rem',
+                                  border: '1px solid',
+                                  borderColor: 'rgba(0, 0, 0, 0.125)',
+                                  marginTop: '12px',
+                                  marginBottom: '12px',
+                                }}
+                              >
+                                {set.NombreConjuntoEntradas}
+                              </Nav.Link>
+                            </Nav.Item>
+                          );
+                        })}
                       </Nav>
                     </Tab.Container>
                   </div>
@@ -191,52 +817,42 @@ const SetEntries = () => {
             </div>
           </div>
 
-          <div class="col-md-9 col-sm-7">
-            <div class="card">
-              <div class="tab-content" id="nav-tabContent">
+          <div className="col-md-9 col-sm-7">
+            <div className="card">
+              <div className="tab-content" id="nav-tabContent">
                 <div
-                  class="tab-pane fade show active"
+                  className="tab-pane fade show active"
                   id="list-fabricantes_modelos"
                   role="tabpanel"
                   aria-labelledby="list-fabricantes_modelos-list"
                 >
-                  <div class="card">
-                    <div class="card-header bg-dark">
-                      <div class="row">
-                        <div class="col col-md-8 text-left">
-                          <h5 class="mb-0">
-                            <h5 class="modal-title text-white w-100">
+                  <div className="card">
+                    <div className="card-header bg-dark">
+                      <div className="row">
+                        <div className="col col-md-8 text-left">
+                          <div className="mb-0">
+                            <h5 className="modal-title text-white w-100">
                               <strong>Entradas</strong>
                             </h5>
-                          </h5>
+                          </div>
                         </div>
-                        <div class="col col-md-4 text-right">
-                          <h5 class="mb-0">
+                        <div className="col col-md-4 text-right">
+                          <div className="mb-0">
                             <Button
-                              onClick={() => setModalShow(true)}
+                              onClick={() => setShowEntriesModal(true)}
                               variant="success"
                               title="Agregar Entrada"
                             >
                               Agregar
                             </Button>{' '}
-                            <ModalAgregarEntrada
-                              show={modalShow}
-                              onHide={() => setModalShow(false)}
-                            />
-                            <Button
-                              variant="danger"
-                              title="Actualizar entradas"
-                            >
-                              Actualizar entradas
-                            </Button>
-                          </h5>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div class="card-body">
-                      <div class="table-responsive">
+                    <div className="card-body">
+                      <div className="table-responsive">
                         <div
-                          class="table-wrapper-scroll-y mb-3"
+                          className="table-wrapper-scroll-y mb-3"
                           style={{
                             position: 'relative',
                             height: '400px',
@@ -245,7 +861,10 @@ const SetEntries = () => {
                           }}
                         >
                           <h5>Publicaciones</h5>
-                          <table class="table">
+                          <table
+                            className="table"
+                            style={{ minWidth: 'max-content', width: '100%' }}
+                          >
                             <thead>
                               <tr>
                                 <th scope="col">
@@ -267,152 +886,76 @@ const SetEntries = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <th scope="col" isValid="true">
-                                  {' '}
-                                  <Form.Check aria-label="option 1" />
-                                </th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
-                                <td>
-                                  <a href="#wea">
-                                    <svg
-                                      class="bi bi-pencil-square"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 16 16"
-                                      fill="currentColor"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                      <path
-                                        fill-rule="evenodd"
-                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                              {entries.map((entrie, index) => {
+                                return entrie.TipoEntrada === 'Publicacion' ? (
+                                  <tr key={index}>
+                                    <th scope="col">
+                                      {' '}
+                                      <Form.Check
+                                        aria-label="option 1"
+                                        onChange={(e) => {
+                                          if (e.target.checked) {
+                                            setSelectedInputs([
+                                              ...selectedInputs,
+                                              entrie._id,
+                                            ]);
+                                          } else {
+                                            const newInputs = selectedInputs.filter(
+                                              (element) => {
+                                                return !(
+                                                  element === entrie._id
+                                                );
+                                              }
+                                            );
+                                            setSelectedInputs(newInputs);
+                                          }
+                                        }}
+                                        checked={selectedInputs.includes(
+                                          entrie._id
+                                        )}
                                       />
-                                    </svg>
-                                  </a>
-
-                                  <a href="#wea" style={{ marginLeft: '3px' }}>
-                                    <svg
-                                      class="bi bi-trash-fill"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 16 16"
-                                      fill="currentColor"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      onClick={() => setShowModal(true)}
-                                    >
-                                      <path
-                                        fill-rule="evenodd"
-                                        d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"
+                                    </th>
+                                    <td>{entrie.NombreEntrada}</td>
+                                    <td>{entrie.Autores}</td>
+                                    <td>{entrie.Revista}</td>
+                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>{entrie.Volumen}</td>
+                                    <td>{entrie.NumeroTomo}</td>
+                                    <td>{entrie.IntervaloPaginas}</td>
+                                    <td>
+                                      <FontAwesomeIcon
+                                        icon={faTrashAlt}
+                                        cursor="pointer"
+                                        style={{ marginRight: '10px' }}
+                                        onClick={() => {
+                                          setDeletedID(entrie._id);
+                                          setShowDeleteModal(true);
+                                        }}
                                       />
-                                    </svg>
-                                  </a>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="option 2" />{' '}
-                                </th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                                <td>@fat</td>
-                                <td>@fat</td>
-                                <td>@fat</td>
-                                <td>@fat</td>
-                                <td>
-                                  <a href="#wea">
-                                    <svg
-                                      class="bi bi-pencil-square"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 16 16"
-                                      fill="currentColor"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                      <path
-                                        fill-rule="evenodd"
-                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
+                                      <FontAwesomeIcon
+                                        icon={faEdit}
+                                        cursor="pointer"
+                                        onClick={() => {
+                                          EntriesAPI.getEntry(entrie._id).then(
+                                            (response) => {
+                                              setCallApi(!callApi);
+                                              setEditedEntry(response.Entrada);
+                                              setShowEditModal(true);
+                                            }
+                                          );
+                                        }}
                                       />
-                                    </svg>
-                                  </a>
-
-                                  <a href="#wea" style={{ marginLeft: '3px' }}>
-                                    <svg
-                                      class="bi bi-trash-fill"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 16 16"
-                                      fill="currentColor"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        fill-rule="evenodd"
-                                        d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"
-                                      />
-                                    </svg>
-                                  </a>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="option 3" />{' '}
-                                </th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                                <td>@twitter</td>
-                                <td>@twitter</td>
-                                <td>@twitter</td>
-                                <td>@twitter</td>
-                                <td>
-                                  <a href="#wea">
-                                    <svg
-                                      class="bi bi-pencil-square"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 16 16"
-                                      fill="currentColor"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-                                      <path
-                                        fill-rule="evenodd"
-                                        d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"
-                                      />
-                                    </svg>
-                                  </a>
-
-                                  <a href="#wea" style={{ marginLeft: '3px' }}>
-                                    <svg
-                                      class="bi bi-trash-fill"
-                                      width="1em"
-                                      height="1em"
-                                      viewBox="0 0 16 16"
-                                      fill="currentColor"
-                                      xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                      <path
-                                        fill-rule="evenodd"
-                                        d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"
-                                      />
-                                    </svg>
-                                  </a>
-                                </td>
-                              </tr>
+                                    </td>
+                                  </tr>
+                                ) : null;
+                              })}
                             </tbody>
                           </table>
                           <h5>Premios</h5>
-                          <table class="table">
+                          <table
+                            className="table"
+                            style={{ minWidth: 'max-content', width: '100%' }}
+                          >
                             <thead>
                               <tr>
                                 <th scope="col">
@@ -427,44 +970,74 @@ const SetEntries = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="1" />{' '}
-                                </th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@twitter</td>
-                                <td>@twitter</td>
-                              </tr>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="2" />{' '}
-                                </th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@twitter</td>
-                                <td>@twitter</td>
-                                <td>@fat</td>
-                              </tr>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="3" />{' '}
-                                </th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                                <td>@twitter</td>
-                                <td>@twitter</td>
-                              </tr>
+                              {entries.map((entrie, index) => {
+                                return entrie.TipoEntrada === 'Premio' ? (
+                                  <tr key={index}>
+                                    <th scope="col">
+                                      {' '}
+                                      <Form.Check
+                                        onChange={(e) => {
+                                          if (e.target.checked) {
+                                            setSelectedInputs([
+                                              ...selectedInputs,
+                                              entrie._id,
+                                            ]);
+                                          } else {
+                                            const newInputs = selectedInputs.filter(
+                                              (element) => {
+                                                return !(
+                                                  element === entrie._id
+                                                );
+                                              }
+                                            );
+                                            setSelectedInputs(newInputs);
+                                          }
+                                        }}
+                                        checked={selectedInputs.includes(
+                                          entrie._id
+                                        )}
+                                      />
+                                    </th>
+                                    <td>{entrie.NombreEntrada}</td>
+                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>{entrie.Categoria}</td>
+                                    <td>{entrie.LugarObtenido}</td>
+                                    <td>{entrie.Institucion}</td>
+                                    <td>
+                                      <FontAwesomeIcon
+                                        icon={faTrashAlt}
+                                        style={{ marginRight: '10px' }}
+                                        cursor="pointer"
+                                        onClick={() => {
+                                          setDeletedID(entrie._id);
+                                          setShowDeleteModal(true);
+                                        }}
+                                      />
+                                      <FontAwesomeIcon
+                                        icon={faEdit}
+                                        cursor="pointer"
+                                        onClick={() => {
+                                          EntriesAPI.getEntry(entrie._id).then(
+                                            (response) => {
+                                              setCallApi(!callApi);
+                                              setEditedEntry(response.Entrada);
+                                              setShowEditModal(true);
+                                            }
+                                          );
+                                        }}
+                                      />
+                                    </td>
+                                  </tr>
+                                ) : null;
+                              })}
                             </tbody>
                           </table>
 
                           <h5>Conferencias</h5>
-                          <table class="table">
+                          <table
+                            className="table"
+                            style={{ minWidth: 'max-content', width: '100%' }}
+                          >
                             <thead>
                               <tr>
                                 <th scope="col">
@@ -478,41 +1051,74 @@ const SetEntries = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="1" />{' '}
-                                </th>
-                                <th>1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                              </tr>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="2" />
-                                </th>
-                                <th>2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                              </tr>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="3" />
-                                </th>
-                                <th>3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                              </tr>
+                              {entries.map((entrie, index) => {
+                                return entrie.TipoEntrada === 'Conferencia' ? (
+                                  <tr key={index}>
+                                    <th scope="col">
+                                      {' '}
+                                      <Form.Check
+                                        aria-label="option 1"
+                                        onChange={(e) => {
+                                          if (e.target.checked) {
+                                            setSelectedInputs([
+                                              ...selectedInputs,
+                                              entrie._id,
+                                            ]);
+                                          } else {
+                                            const newInputs = selectedInputs.filter(
+                                              (element) => {
+                                                return !(
+                                                  element === entrie._id
+                                                );
+                                              }
+                                            );
+                                            setSelectedInputs(newInputs);
+                                          }
+                                        }}
+                                        checked={selectedInputs.includes(
+                                          entrie._id
+                                        )}
+                                      />
+                                    </th>
+                                    <td>{entrie.NombreEntrada}</td>
+                                    <td>{entrie.Autores}</td>
+                                    <td>{entrie.IntervaloPagina}</td>
+                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>
+                                      <FontAwesomeIcon
+                                        icon={faTrashAlt}
+                                        style={{ marginRight: '10px' }}
+                                        cursor="pointer"
+                                        onClick={() => {
+                                          setDeletedID(entrie._id);
+                                          setShowDeleteModal(true);
+                                        }}
+                                      />
+                                      <FontAwesomeIcon
+                                        icon={faEdit}
+                                        cursor="pointer"
+                                        onClick={() => {
+                                          EntriesAPI.getEntry(entrie._id).then(
+                                            (response) => {
+                                              setCallApi(!callApi);
+                                              setEditedEntry(response.Entrada);
+                                              setShowEditModal(true);
+                                            }
+                                          );
+                                        }}
+                                      />
+                                    </td>
+                                  </tr>
+                                ) : null;
+                              })}
                             </tbody>
                           </table>
 
                           <h5>Concursos</h5>
-                          <table class="table">
+                          <table
+                            className="table"
+                            style={{ minWidth: 'max-content', width: '100%' }}
+                          >
                             <thead>
                               <tr>
                                 <th scope="col">
@@ -526,36 +1132,66 @@ const SetEntries = () => {
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="1" />
-                                </th>
-                                <th>1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                              </tr>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="2" />
-                                </th>
-                                <th>2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                              </tr>
-                              <tr>
-                                <th scope="col">
-                                  {' '}
-                                  <Form.Check aria-label="3" />
-                                </th>
-                                <th>3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                              </tr>
+                              {entries.map((entrie, index) => {
+                                return entrie.TipoEntrada === 'Concurso' ? (
+                                  <tr key={index}>
+                                    <th scope="col">
+                                      {' '}
+                                      <Form.Check
+                                        aria-label="option 1"
+                                        onChange={(e) => {
+                                          if (e.target.checked) {
+                                            setSelectedInputs([
+                                              ...selectedInputs,
+                                              entrie._id,
+                                            ]);
+                                          } else {
+                                            const newInputs = selectedInputs.filter(
+                                              (element) => {
+                                                return !(
+                                                  element === entrie._id
+                                                );
+                                              }
+                                            );
+                                            setSelectedInputs(newInputs);
+                                          }
+                                        }}
+                                        checked={selectedInputs.includes(
+                                          entrie._id
+                                        )}
+                                      />
+                                    </th>
+                                    <td>{entrie.NombreEntrada}</td>
+                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>{entrie.Categoria}</td>
+                                    <td>{entrie.IntervaloPagina}</td>
+                                    <td>
+                                      <FontAwesomeIcon
+                                        icon={faTrashAlt}
+                                        cursor="pointer"
+                                        style={{ marginRight: '10px' }}
+                                        onClick={() => {
+                                          setDeletedID(entrie._id);
+                                          setShowDeleteModal(true);
+                                        }}
+                                      />
+                                      <FontAwesomeIcon
+                                        icon={faEdit}
+                                        cursor="pointer"
+                                        onClick={() => {
+                                          EntriesAPI.getEntry(entrie._id).then(
+                                            (response) => {
+                                              setCallApi(!callApi);
+                                              setEditedEntry(response.Entrada);
+                                              setShowEditModal(true);
+                                            }
+                                          );
+                                        }}
+                                      />
+                                    </td>
+                                  </tr>
+                                ) : null;
+                              })}
                             </tbody>
                           </table>
                         </div>
