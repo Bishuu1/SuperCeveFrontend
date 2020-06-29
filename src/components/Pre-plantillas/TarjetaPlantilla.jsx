@@ -35,7 +35,7 @@ const TarjetaPlantilla = (props) => {
                     </div> 
                     <div className="ml-4">
                         <div className="btn-group btn-group-sm mb-2 ml-4" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-success text-dark btn-sm mr-1" title="Editar" onClick={() => props.ChangeTipoPlantilla(props.tipo)}><FontAwesomeIcon  icon={faPlus}/></button>
+                        <button type="button" class="btn btn-success text-dark btn-sm mr-1" title="Agregar plantilla" onClick={() => props.ChangeTipoPlantilla(props.tipo)}><FontAwesomeIcon  icon={faPlus}/></button>
                         <button type="button" class="btn btn-danger text-dark btn-sm text-dark" title="No es eliminable" disabled><FontAwesomeIcon  icon={faTrash}/></button>
                         </div>
                     </div> 

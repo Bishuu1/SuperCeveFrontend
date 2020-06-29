@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit } from '@fortawesome/free-solid-svg-icons';
 import { showToast } from '../../components/common/Toast';
 import { Formik, Form as Forma } from 'formik';
-
+import Moment from 'react-moment';
 const SetEntries = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showDeleteSetsModal, setShowDeleteSetsModal] = useState(false);
@@ -918,7 +918,12 @@ const SetEntries = () => {
                                     <td>{entrie.NombreEntrada}</td>
                                     <td>{entrie.Autores}</td>
                                     <td>{entrie.Revista}</td>
-                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>
+                                      {(entrie.FechaEntrada !== null)? 
+                                      <Moment format="D MMM YYYY" withTitle>
+                                      {entrie.FechaEntrada}</Moment>
+                                      :"Sin fecha"}
+                                    </td>
                                     <td>{entrie.Volumen}</td>
                                     <td>{entrie.NumeroTomo}</td>
                                     <td>{entrie.IntervaloPaginas}</td>
@@ -999,7 +1004,12 @@ const SetEntries = () => {
                                       />
                                     </th>
                                     <td>{entrie.NombreEntrada}</td>
-                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>
+                                      {(entrie.FechaEntrada !== null)? 
+                                      <Moment format="D MMM YYYY" withTitle>
+                                      {entrie.FechaEntrada}</Moment>
+                                      :"Sin fecha"}
+                                      </td>
                                     <td>{entrie.Categoria}</td>
                                     <td>{entrie.LugarObtenido}</td>
                                     <td>{entrie.Institucion}</td>
@@ -1083,7 +1093,12 @@ const SetEntries = () => {
                                     <td>{entrie.NombreEntrada}</td>
                                     <td>{entrie.Autores}</td>
                                     <td>{entrie.IntervaloPagina}</td>
-                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>
+                                      {(entrie.FechaEntrada !== null)? 
+                                      <Moment format="D MMM YYYY" withTitle>
+                                      {entrie.FechaEntrada}</Moment>
+                                      :"Sin fecha"}
+                                    </td>
                                     <td>
                                       <FontAwesomeIcon
                                         icon={faTrashAlt}
@@ -1162,7 +1177,12 @@ const SetEntries = () => {
                                       />
                                     </th>
                                     <td>{entrie.NombreEntrada}</td>
-                                    <td>{entrie.FechaEntrada}</td>
+                                    <td>
+                                      {(entrie.FechaEntrada !== null)? 
+                                      <Moment format="D MMM YYYY" withTitle>
+                                      {entrie.FechaEntrada}</Moment>
+                                      :"Sin fecha"}
+                                    </td>
                                     <td>{entrie.Categoria}</td>
                                     <td>{entrie.IntervaloPagina}</td>
                                     <td>

@@ -18,7 +18,7 @@ const PlantillaA_Entradas = (props) => {
                         fecha={entrada.FechaEntrada}
                         categoria={entrada.Categoria}
                         lugar={entrada.LugarObtenido}
-                        institucion={entrada.Institución}
+                        institucion={entrada.Institucion}
                         autores={entrada.Autores}
                         revista={entrada.Revista}
                         tomo={entrada.NumeroTomo}

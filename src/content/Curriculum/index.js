@@ -1,10 +1,11 @@
-import React, { useContext, useEffect } from 'react';
 import { AppContext } from '../../app/AppContext';
 import { useHistory } from 'react-router-dom';
-import React, {useState,useEffect, Fragment} from 'react';
+import  React, {useContext,useState,useEffect, Fragment} from 'react';
 import CurriculumTable from "../../components/CurriculumComponent/CurriculumTable"
 
 const Curriculum= () => {
+  const history = useHistory();
+  const {user}=useContext(AppContext);
   const [etapa , setEtapa] = useState("0");
   const ChangeEtapa = ( NuevaEtapa ) =>{
     setEtapa(NuevaEtapa)

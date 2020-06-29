@@ -62,7 +62,12 @@ function getSetEntries(Usuario) {
     },
   });
 }
-
+function getSetEntryEntradas(ConjuntoId) {
+  return request({
+    url: `/SetEntries/SetEntry/${ConjuntoId}`,
+    method: 'GET',
+  });
+}
 function creatSetEntry(payload) {
   return request({
     url: '/SetEntries/SetEntry',
@@ -80,6 +85,7 @@ const EntriesAPI = {
   creatSetEntry,
   deleteSetEntry,
   updateSetEntry,
+  getSetEntryEntradas
 };
 
 export default EntriesAPI;

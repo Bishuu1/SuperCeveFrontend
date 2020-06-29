@@ -15,7 +15,8 @@ const ColumnaPlantillas = (props) => {
                     position: "relative",
                     height: "470px",
                     width: "100%",
-                    overflow: "auto",            
+                    overflowY: "auto",
+                    overflowX: "hidden"            
                 }}>
                 <div className="row" style={{maxWidth:"340px"}}>
                 <TarjetaPlantilla ChangeTipoPlantilla={props.ChangeTipoPlantilla} tipo="A" nombre=""/>

@@ -10,7 +10,7 @@ import { Fragment } from 'react';
 const PlantillaA = (props) => {
     return ( 
     <Fragment>
-    <div className="PlantillaA card border-dark p-4 " style={{width:"400px",height:"500px", fontFamily:props.plantilla.Fuente}}>
+    <div className="PlantillaA card border-dark p-4 " style={{width:"400px",height:"500px", overflowY:"auto" ,fontFamily:props.plantilla.Fuente}}>
         {props.plantilla.Color === 'azul'?  
         <div className="">
             <div className="row pl-3 pr-3">
@@ -23,10 +23,10 @@ const PlantillaA = (props) => {
             </div>
             <hr/>  
             <div className="PlantillaBody">
-            {props.entradas.filter(entrada => entrada.TipoEntrada === "Publicación").length != 0?  
+            {props.entradas.filter(entrada => entrada.TipoEntrada === "Publicacion").length != 0?  
                 <div className="card border-primary p-2 mb-2" >  
                 <><TituloTipoEntrada titulo={"Publicaciones"}/>
-                    <PlantillaA_Entradas entradas={props.entradas} tipo={"Publicación"}/></>
+                    <PlantillaA_Entradas entradas={props.entradas} tipo={"Publicacion"}/></>
                 </div> 
                     :''}
                 {props.entradas.filter(entrada => entrada.TipoEntrada === "Conferencia").length != 0?   
@@ -62,10 +62,10 @@ const PlantillaA = (props) => {
                 </div>              
             </div>
             <hr/>    
-                {props.entradas.filter(entrada => entrada.TipoEntrada === "Publicación").length != 0?  
+                {props.entradas.filter(entrada => entrada.TipoEntrada === "Publicacion").length != 0?  
                 <div className="card border-danger p-2 mb-2" >  
                 <><TituloTipoEntrada titulo={"Publicaciones"}/></> 
-                    <PlantillaA_Entradas entradas={props.entradas} tipo={"Publicación"}/>
+                    <PlantillaA_Entradas entradas={props.entradas} tipo={"Publicacion"}/>
                 </div> 
                     :''}
                 {props.entradas.filter(entrada => entrada.TipoEntrada === "Conferencia").length != 0?   
@@ -100,10 +100,10 @@ const PlantillaA = (props) => {
             </div>
             <hr/>
             
-                {props.entradas.filter(entrada => entrada.TipoEntrada === "Publicación").length != 0?  
+                {props.entradas.filter(entrada => entrada.TipoEntrada === "Publicacion").length != 0?  
                 <div className="card border-dark p-2 mb-2" >  
                 <><TituloTipoEntrada titulo={"Publicaciones"}/></> 
-                    <PlantillaA_Entradas entradas={props.entradas} tipo={"Publicación"}/>
+                    <PlantillaA_Entradas entradas={props.entradas} tipo={"Publicacion"}/>
                 </div> 
                     :''}
                 {props.entradas.filter(entrada => entrada.TipoEntrada === "Conferencia").length != 0?   

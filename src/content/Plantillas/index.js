@@ -1,15 +1,22 @@
-import React, { Fragment ,useEffect, useState} from 'react';
+import React, { Fragment ,useContext ,useEffect, useState} from 'react';
 import PlantillaA from "../../components/Pre-plantillas/PlantillaA"
-import { Container , col,Card,Button, ListGroupItem, ListGroup} from 'react-bootstrap';
+import { Container , col,Card,Button, ListGroupItem, ListGroup,Modal} from 'react-bootstrap';
 import ColumnaPlantillas from '../../components/Pre-plantillas/ColumnaPlantillas';
 import PlantillaB from "../../components/Pre-plantillas/PlantillaB"
 import PlantillaC from "../../components/Pre-plantillas/PlantillaC"
+import { AppContext } from '../../app/AppContext';
 import PlantillasAPI from '../Plantillas/plantillas-api';
 import { showToast } from '../../components/common/Toast';
 import { useHistory, useParams } from 'react-router-dom';
+import EntriesAPI from '../SetEntries/entries-api';
 const Plantillas = () => {
+  const { user } = useContext(AppContext);
   const history = useHistory();
+  
+  const [show, setShow] = useState(false);
 
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const [update,setUpdate] = useState(false);
 
   const Academico=[ //academico de muestra
@@ -30,104 +37,104 @@ const Plantillas = () => {
       TipoEntrada: "Publicación",
       IntervaloPaginas: "15-21",
       Autores: "autor1, autor2",
-      FechaEntrada: "18-15-2020",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
       Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: null,
       LugarObtenido: "Lugar obtenido",
-      Institución: "Institución"},
+      Institucion: "Institucion"},
     {
       _id:'7',
       NombreEntrada: "Nombre de entrada",
       TipoEntrada: "Publicación",
       IntervaloPaginas: "15-21",
       Autores: "autor1, autor2",
-      FechaEntrada: "18-15-2020",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
       Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: null,
       LugarObtenido: "Lugar obtenido",
-      Institución: "Institución"},
+      Institucion: "Institucion"},
     {
       _id:'5',
       NombreEntrada: "Nombre de entrada",
       TipoEntrada: "Concurso",
       IntervaloPaginas: "15-21",
       Autores: "autor1, autor2",
-      FechaEntrada: "18-15-2020",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
       Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: null,
       LugarObtenido: "Lugar obtenido",
-      Institución: "Institución"},
+      Institucion: "Institucion"},
     {
       _id:'4',
       NombreEntrada: "Nombre de entrada",
       TipoEntrada: "Premio",
       IntervaloPaginas: "15-21",
       Autores: "autor1, autor2",
-      FechaEntrada: "18-15-2020",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
       Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: "Categoria",
       LugarObtenido: "Lugar obtenido",
-      Institución: "Institución"},
+      Institucion: "Institucion"},
     {
       _id:'1',
       NombreEntrada: "Nombre de entrada",
       TipoEntrada: "Premio",
       IntervaloPaginas: "15-21",
       Autores: "autor1, autor2",
-      FechaEntrada: "18-15-2020",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
       Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: "Categoria",
       LugarObtenido: "Lugar obtenido",
-      Institución: "Institución"},
+      Institucion: "Institucion"},
       {
       _id:'2',
       NombreEntrada: "Nombre de entrada",
       TipoEntrada: "Publicación",
       IntervaloPaginas: "15-21",
       Autores: "autor1, autor2",
-      FechaEntrada: "18-15-2020",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
       Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: "Categoria",
       LugarObtenido: "Lugar obtenido",
-      Institución: null},
+      Institucion: null},
       {
       _id:'3',
       NombreEntrada: "Nombre de entrada",
       TipoEntrada: "Concurso",
       IntervaloPaginas: "15-21",
       Autores: "autor1, autor2",
-      FechaEntrada: "18-15-2020",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
       Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: "Categoria",
       LugarObtenido: "Lugar obtenido",
-      Institución: "Institución"},
+      Institucion: "Institucion"},
       {
       _id:'4',
       NombreEntrada: "Nombre de entrada",
       TipoEntrada: "Conferencia",
       IntervaloPaginas: "15-21",
       Autores: "autor1, autor2",
-      FechaEntrada: "18-15-2020",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
       Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: "Categoria",
       LugarObtenido: "Lugar obtenido",
-      Institución: "Institución"},
+      Institucion: "Institucion"},
   ]
   const [entradas, setEntradas] = useState(entradasData); //estado de entradas de muestra
 
@@ -140,12 +147,13 @@ const Plantillas = () => {
     TipoPlantilla:"A"
   })
   
-
-
+  const [conjuntosDB , setConjuntosDB] = useState([]);//(conjuntos del usuario)
+  const [entradasDB , setEntradasDB] = useState([]);//(centradas del usuario)
   const [plantillasDB , setPlantillasDB] = useState([]) //Plantillas de la BD
 
   useEffect(()=>{
     ObtenerDatos()
+    ObtenerDatosConjuntos()
   }, [update])
 
   const ObtenerDatos = async () => {
@@ -153,6 +161,23 @@ const Plantillas = () => {
     const plantillas = await data.json()
     setPlantillasDB(plantillas.Templates)
   }
+  const ObtenerDatosConjuntos = async () => {
+    await EntriesAPI.getEntries(user.user._id).then((response) =>{
+      setEntradasDB(response.Entradas)
+      //console.log(entradasDB)
+    });
+
+    await EntriesAPI.getSetEntries(user.user._id).then((response) => {
+      const conjuntos=response.Conjuntos;
+      console.log(response.Conjuntos)  
+      setConjuntosDB(conjuntos);
+      console.log(conjuntosDB);
+    });
+    user?.NivelAcceso === 1 && history.push('/');
+  }
+
+
+
   const ChangeColor = ( color ) =>{
     console.log(color);
     setPlantilla({
@@ -225,13 +250,13 @@ const Plantillas = () => {
       .then((response) => {
         showToast({
           type: 'success',
-          text: 'Se ha guardado usuario con exito',
+          text: 'Se ha guardado plantilla con exito',
         });
       })
       .catch(() => {
         showToast({
           type: 'error',
-          text: 'Error al guardar usuario',
+          text: 'Error al guardar plantilla',
         });
       })
       .finally(() => {
@@ -252,7 +277,7 @@ const Plantillas = () => {
         .catch(() => {
           showToast({
             type: 'error',
-            text: 'Error en la modificación',
+            text: 'Error en la modificación de plantilla',
           });
         })
         .finally(() => {
@@ -265,18 +290,28 @@ const Plantillas = () => {
             .then(() => {
               showToast({
                 type: 'success',
-                text: 'Se ha eliminado al usuario con éxito',
+                text: 'Se ha eliminado al plantilla con éxito',
               });
             })
             .catch(() => {
               showToast({
                 type: 'error',
-                text: 'Error en la eliminación',
+                text: 'Error en la eliminación de plantilla',
               });
             });
             setUpdate(!update);
   }
-
+  const BottonUsar = async(itemId) => {
+    console.log(itemId)
+    await EntriesAPI.getSetEntryEntradas(itemId).then((response) => {
+      const entradasAPI = response.Entradas 
+      console.log(entradasAPI)
+      console.log(entradas)
+      setEntradas(entradasAPI)
+    });
+    user?.NivelAcceso === 1 && history.push('/'); 
+    handleClose()
+  }
 
 
 
@@ -341,15 +376,15 @@ const Plantillas = () => {
               <div className="btn-group btn-group-sm mb-2"  role="group" aria-label="Basic example">
                 {(plantilla.Id === "")? 
                 
-                  <><button type="button" class="btn btn-success" title="Guardar" 
-                  style={{fontSize:"16px"}} onClick={() => CrearPlantilla()}>Crear plantilla</button>
-                  <button type="button" class="btn btn-dark ml-1" title="Usar plantilla en curriculum" 
-                  style={{fontSize:"16px"}} >Usar plantilla</button>  </>
+                  <><button type="button" class="btn btn-success" title="Crear plantilla" 
+                  style={{fontSize:"18px"}} onClick={() => CrearPlantilla()}>Crear plantilla</button>
+                  <button type="button" class="btn btn-primary ml-1" title="Elegir conjuntos" 
+                  style={{fontSize:"18px"}} onClick={handleShow} >Elegir conjunto</button>  </>
                 : 
                   <><button type="button" class="btn btn-warning" title="Guardar" 
-                  style={{fontSize:"16px"}}  onClick={() => GuardarPlantilla()}  >Guardar cambios</button>
-                  <button type="button" class="btn btn-dark ml-1" title="Usar plantilla en curriculum" 
-                  style={{fontSize:"16px"}} >Usar plantilla</button>  </>
+                  style={{fontSize:"18px"}}  onClick={() => GuardarPlantilla()}  >Guardar cambios</button>
+                  <button type="button" class="btn btn-primary ml-1" title="Elegir conjuntos" 
+                  style={{fontSize:"18px"}} onClick={handleShow} >Elegir conjunto</button>  </>
                 }
                 
               </div>
@@ -357,6 +392,59 @@ const Plantillas = () => {
             </div>
             
         </div>
+
+        <>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Conjuntos de entradas</Modal.Title>
+        </Modal.Header>
+
+
+
+        <Modal.Body>
+        {(conjuntosDB.length === 0)? 
+                  <>
+                <span class="badge badge-pill badge-warning">No hay conjuntos creados.</span>
+                  </>
+        : <>
+        <div className="scroll" style={{ position: "relative",
+                    height: "400px",
+                    width: "100%",
+                    overflow: "auto",        }}>
+                    <ul className="list-group">  {
+                    conjuntosDB.map( item => (
+                      <li className="list-group-item" key={item._id}>
+                        {item.NombreConjuntoEntradas}
+                        <div class="btn-group btn-group-sm float-right" role="group" aria-label="...">
+                        <button type="button" class="btn btn-primary btn-sm" 
+                                onClick={() => BottonUsar(item._id)}>Usar</button></div>  
+                      </li>
+
+                    ))
+                  }</ul>
+                      
+                      </div>
+
+          </>}
+          
+
+        
+        </Modal.Body>
+
+
+
+
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
 
     </Fragment>
   );
