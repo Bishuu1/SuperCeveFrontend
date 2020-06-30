@@ -46,7 +46,7 @@ const Profile = () => {
           });
           showToast({
             type: 'success',
-            text: 'Se han modificado con exito',
+            text: 'Se han modificado con éxito',
           });
           history.push('/');
         })
@@ -147,7 +147,7 @@ const Profile = () => {
                   </Col>
                   <Col xs={{ offset: 3 }}>
                     <small>
-                      Si deja el campo vacio no se modificara la contraseña.
+                      Si deja el campo vacío no se modificará la contraseña.
                     </small>
                   </Col>
                 </Form.Group>
@@ -169,8 +169,8 @@ const Profile = () => {
                     <Form.Group>
                       <small>
                         <strong>
-                          Si marca el checkbox, el sistema actualizara sus
-                          entradas con las del codigo asociado.
+                          Si marca el checkbox, el sistema actualizará sus
+                          entradas con las del código asociado.
                         </strong>
                       </small>
                       <Form.Control

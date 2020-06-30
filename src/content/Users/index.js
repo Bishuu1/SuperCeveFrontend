@@ -53,22 +53,24 @@ const Users = () => {
         accessor: 'type',
       },
       {
-        accessor: (user) => {
+        accessor: (us) => {
           return (
             <div>
-              <FontAwesomeIcon
-                icon={faTrash}
-                style={{ marginRight: '15px', cursor: 'pointer' }}
-                onClick={() => {
-                  setDeletedID(user.id);
-                  setShowModal(true);
-                }}
-              />
+              {us.id !== user.user._id && (
+                <FontAwesomeIcon
+                  icon={faTrash}
+                  style={{ marginRight: '15px', cursor: 'pointer' }}
+                  onClick={() => {
+                    setDeletedID(us.id);
+                    setShowModal(true);
+                  }}
+                />
+              )}
               <FontAwesomeIcon
                 icon={faEdit}
                 style={{ cursor: 'pointer' }}
                 onClick={() => {
-                  history.push(`/usuarios/editar-usuario/${user.id}`);
+                  history.push(`/usuarios/editar-usuario/${us.id}`);
                 }}
               />
             </div>
@@ -107,11 +109,11 @@ const Users = () => {
             });
         }}
       >
-        Esta seguro que quiere eliminar el usuario?
+        ¿Está seguro que quiere eliminar el usuario?
       </ConfirmModal>
       <Row>
         <Col sm={12}>
-          <h1>Administracion de usuarios</h1>
+          <h1>Administración de usuarios</h1>
         </Col>
         <Col>
           <UserTable data={users} columns={columns} dataPerPage={10} />

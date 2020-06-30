@@ -18,7 +18,7 @@ const AddUser = () => {
       .then((response) => {
         showToast({
           type: 'success',
-          text: 'Se ha guardado usuario con exito',
+          text: 'Se ha guardado usuario con éxito',
         });
         // history.push('/usuarios');
       })
@@ -78,7 +78,7 @@ const AddUser = () => {
                     <option value="">Seleccione tipo</option>
                     <option value="1">Administrador</option>
                     <option value="2">Secretaria</option>
-                    <option value="3">Academico</option>
+                    <option value="3">Académico</option>
                   </Select>
                 </Col>
                 <Col sm={{ span: 5, offset: 2 }}>
@@ -106,10 +106,12 @@ const AddUser = () => {
                   <Input
                     type="text"
                     name="CorreoUsuario"
-                    label="Correo electronico"
+                    label="Correo electrónico"
                   />
+                </Col>
+                <Col sm={{ span: 5, offset: 2 }}>
                   <Row>
-                    <Col sm={4}>
+                    <Col xs={4} sm={4}>
                       <Button
                         type="button"
                         variant="outline-dark"
@@ -118,7 +120,7 @@ const AddUser = () => {
                         Volver
                       </Button>
                     </Col>
-                    <Col sm={{ span: 6, offset: 2 }}>
+                    <Col xs={8} sm={{ span: 6, offset: 2 }}>
                       <Button type="submit">Crear usuario</Button>
                     </Col>
                   </Row>

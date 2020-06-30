@@ -55,7 +55,7 @@ const TarjetaPlantilla = (props) => {
               >
                 <button
                   type="button"
-                  class="btn btn-success text-dark btn-sm mr-1"
+                  className="btn btn-success text-dark btn-sm mr-1"
                   title="Agregar plantilla"
                   onClick={() => props.ChangeTipoPlantilla(props.tipo)}
                 >
@@ -63,7 +63,7 @@ const TarjetaPlantilla = (props) => {
                 </button>
                 <button
                   type="button"
-                  class="btn btn-danger text-dark btn-sm text-dark"
+                  className="btn btn-danger text-dark btn-sm text-dark"
                   title="No es eliminable"
                   disabled
                 >
@@ -115,7 +115,7 @@ const TarjetaPlantilla = (props) => {
               >
                 <button
                   type="button"
-                  class="btn btn-warning text-dark btn-sm mr-1"
+                  className="btn btn-warning text-dark btn-sm mr-1"
                   title="Editar"
                   onClick={() => props.BottonEditar(props.plantilla)}
                 >
@@ -123,7 +123,7 @@ const TarjetaPlantilla = (props) => {
                 </button>
                 <button
                   type="button"
-                  class="btn btn-danger text-dark btn-sm text-dark"
+                  className="btn btn-danger text-dark btn-sm text-dark"
                   title="Eliminar"
                   onClick={() => props.EliminarPlantilla(props.plantilla._id)}
                 >

@@ -30,7 +30,7 @@ const Login = () => {
       }}
     >
       <FontAwesomeIcon icon={faSignInAlt} width={40} />
-      <h2>Inicio de sesion</h2>
+      <h2>Inicio de sesión</h2>
       <div style={{ marginTop: '16px', padding: '16px' }}>
         <Formik
           initialValues={{ CorreoUsuario: '', Contraseña: '' }}
@@ -43,13 +43,13 @@ const Login = () => {
           <Form>
             <Input
               type="text"
-              placeholder="Correo electronico"
+              placeholder="Correo electrónico"
               name="CorreoUsuario"
               label="Usuario"
             />
             <Input
               type="password"
-              placeholder="Correo electronico"
+              placeholder="Contraseña"
               name="Contraseña"
               label="Contraseña"
             />

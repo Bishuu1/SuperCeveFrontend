@@ -18,6 +18,7 @@ const PlantillaC = (props) => {
           width: '400px',
           height: '500px',
           fontFamily: props.plantilla.Fuente,
+          overflowY: 'auto',
         }}
       >
         {props?.plantilla.Color == 'azul' ? (

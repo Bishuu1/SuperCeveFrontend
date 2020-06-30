@@ -1,7 +1,7 @@
 const USER_TYPE = {
   1: 'Administrador',
   2: 'Secretario/a',
-  3: 'Academico',
+  3: 'Académico',
 };
 
 export { USER_TYPE };

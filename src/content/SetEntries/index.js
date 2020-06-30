@@ -99,7 +99,7 @@ const SetEntries = () => {
             });
         }}
       >
-        ¿Esta seguro que quiere eliminar la entrada?
+        ¿Está seguro que quiere eliminar la entrada?
       </Modal>
       <Modal
         title="Eliminar conjunto"
@@ -134,7 +134,7 @@ const SetEntries = () => {
             });
         }}
       >
-        ¿Esta seguro que quiere eliminar el conjunto?
+        ¿Está seguro que quiere eliminar el conjunto?
       </Modal>
       <Modal
         title="Agregar conjunto"
@@ -241,7 +241,7 @@ const SetEntries = () => {
                   {values.TipoEntrada === 'Publicacion' && (
                     <>
                       <Form.Group>
-                        <Form.Label>Titulo</Form.Label>
+                        <Form.Label>Título</Form.Label>
                         <Form.Control
                           name="NombreEntrada"
                           value={values.NombreEntrada}
@@ -357,7 +357,7 @@ const SetEntries = () => {
                         />
                       </Form.Group>
                       <Form.Group>
-                        <Form.Label>Institucion</Form.Label>
+                        <Form.Label>Institución</Form.Label>
                         <Form.Control
                           name="Institucion"
                           value={values.Institucion}
@@ -389,7 +389,7 @@ const SetEntries = () => {
                         </Col>
                         <Col>
                           <Form.Group>
-                            <Form.Label>Intervalo paginas</Form.Label>
+                            <Form.Label>Intervalo páginas</Form.Label>
                             <Form.Control
                               name="IntervaloPaginas"
                               value={values.IntervaloPaginas}
@@ -431,7 +431,7 @@ const SetEntries = () => {
                         </Col>
                         <Col>
                           <Form.Group>
-                            <Form.Label>Intervalo paginas</Form.Label>
+                            <Form.Label>Intervalo páginas</Form.Label>
                             <Form.Control
                               name="IntervaloPaginas"
                               value={values.IntervaloPaginas}
@@ -441,7 +441,7 @@ const SetEntries = () => {
                         </Col>
                       </Row>
                       <Form.Group>
-                        <Form.Label>Categoria</Form.Label>
+                        <Form.Label>Categoría</Form.Label>
                         <Form.Control
                           name="Categoria"
                           value={values.Categoria}
@@ -548,7 +548,7 @@ const SetEntries = () => {
                   {values.TipoEntrada === 'Publicacion' && (
                     <>
                       <Form.Group>
-                        <Form.Label>Titulo</Form.Label>
+                        <Form.Label>Título</Form.Label>
                         <Form.Control
                           name="NombreEntrada"
                           value={values.NombreEntrada}
@@ -696,7 +696,7 @@ const SetEntries = () => {
                         </Col>
                         <Col>
                           <Form.Group>
-                            <Form.Label>Intervalo paginas</Form.Label>
+                            <Form.Label>Intervalo páginas</Form.Label>
                             <Form.Control
                               name="IntervaloPaginas"
                               value={values.IntervaloPaginas}
@@ -738,7 +738,7 @@ const SetEntries = () => {
                         </Col>
                         <Col>
                           <Form.Group>
-                            <Form.Label>Intervalo paginas</Form.Label>
+                            <Form.Label>Intervalo páginas</Form.Label>
                             <Form.Control
                               name="IntervaloPaginas"
                               value={values.IntervaloPaginas}

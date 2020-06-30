@@ -49,7 +49,7 @@ const AddUser = () => {
     <Container fluid>
       <Row>
         <Col sm={{ span: 10, offset: 2 }}>
-          <h1>Crear nuevo usuario</h1>
+          <h1>Editar usuario</h1>
         </Col>
         <Col sm={{ span: 8, offset: 2 }}>
           {user && (
@@ -88,7 +88,7 @@ const AddUser = () => {
                       type="text"
                       name="Contraseña"
                       label="Contraseña"
-                      extra="Si deja vacio el campo no se modificara la contraseña."
+                      extra="Si deja vacío el campo no se modificará la contraseña."
                     />
                   </Col>
                 </Row>
@@ -101,7 +101,7 @@ const AddUser = () => {
                     >
                       <option value="1">Administrador</option>
                       <option value="2">Secretaria</option>
-                      <option value="3">Academico</option>
+                      <option value="3">Académico</option>
                     </Select>
                   </Col>
                   <Col sm={{ span: 5, offset: 2 }}>
@@ -129,10 +129,12 @@ const AddUser = () => {
                     <Input
                       type="text"
                       name="CorreoUsuario"
-                      label="Correo electronico"
+                      label="Correo electrónico"
                     />
+                  </Col>
+                  <Col sm={{ span: 5, offset: 2 }}>
                     <Row>
-                      <Col sm={4}>
+                      <Col xs={4} sm={4}>
                         <Button
                           type="button"
                           variant="outline-dark"
@@ -141,8 +143,8 @@ const AddUser = () => {
                           Volver
                         </Button>
                       </Col>
-                      <Col sm={{ span: 6, offset: 2 }}>
-                        <Button type="submit">Editar usuario</Button>
+                      <Col xs={8} sm={{ span: 6, offset: 2 }}>
+                        <Button type="submit">Crear usuario</Button>
                       </Col>
                     </Row>
                   </Col>

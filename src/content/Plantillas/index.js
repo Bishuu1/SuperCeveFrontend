@@ -17,6 +17,8 @@ import PlantillasAPI from '../Plantillas/plantillas-api';
 import { showToast } from '../../components/common/Toast';
 import { useHistory, useParams } from 'react-router-dom';
 import EntriesAPI from '../SetEntries/entries-api';
+import UsersAPI from '../Users/users-api';
+import moment from 'moment';
 const Plantillas = () => {
   const { user } = useContext(AppContext);
   const history = useHistory();
@@ -45,6 +47,16 @@ const Plantillas = () => {
     Descripcion:
       'Profesor asistente, Escuela informática y Telecomunicaciones, Jornada completa...',
   });
+  useEffect(() => {
+    UsersAPI.getUser(user.user._id).then((response) => {
+      setAcademico({
+        ...response.Usuario,
+        FechaNacimiento: moment(response.Usuario.FechaNacimiento).format(
+          'DD/MM/YYYY'
+        ),
+      });
+    });
+  }, [user.user]);
   const entradasData = [
     //entradas de muestra
     {
@@ -146,7 +158,7 @@ const Plantillas = () => {
       Institucion: 'Institucion',
     },
     {
-      _id: '4',
+      _id: '10',
       NombreEntrada: 'Nombre de entrada',
       TipoEntrada: 'Conferencia',
       IntervaloPaginas: '15-21',
@@ -280,7 +292,7 @@ const Plantillas = () => {
       .then((response) => {
         showToast({
           type: 'success',
-          text: 'Se ha guardado plantilla con exito',
+          text: 'Se ha guardado plantilla con éxito',
         });
       })
       .catch(() => {
@@ -362,13 +374,16 @@ const Plantillas = () => {
             <h4>Opciones</h4>
 
             <div className="form-group row">
-              <label for="inputPassword" class="col-sm-3 col-form-label">
+              <label
+                htmlFor="inputPassword"
+                className="col-sm-3 col-form-label"
+              >
                 Nombre:
               </label>
               <div className="col-sm-8">
                 <input
                   type="text"
-                  class="form-control"
+                  className="form-control"
                   placeholder="Nombre de la plantilla"
                   maxLength="25"
                   name="Nombre"
@@ -384,19 +399,19 @@ const Plantillas = () => {
             <div className="ml-4 pt-2">
               <button
                 type="button"
-                class="btn btn-primary btn-sm border-light"
+                className="btn btn-primary btn-sm border-light"
                 style={{ borderRadius: '50%' }}
                 onClick={() => ChangeColor('azul')}
               ></button>
               <button
                 type="button"
-                class="btn btn-danger btn-sm border-light ml-3"
+                className="btn btn-danger btn-sm border-light ml-3"
                 style={{ borderRadius: '50%' }}
                 onClick={() => ChangeColor('rojo')}
               ></button>
               <button
                 type="button"
-                class="btn btn-dark btn-sm border-light ml-3"
+                className="btn btn-dark btn-sm border-light ml-3"
                 style={{ borderRadius: '50%' }}
                 onClick={() => ChangeColor('negro')}
               ></button>
@@ -406,7 +421,7 @@ const Plantillas = () => {
             <div className="pt-2">
               <button
                 type="button"
-                class="btn btn-dark btn-sm btn-block text-left mb-2"
+                className="btn btn-dark btn-sm btn-block text-left mb-2"
                 style={{ fontFamily: 'Consolas' }}
                 onClick={() => ChangeFuente('Georgia')}
               >
@@ -414,7 +429,7 @@ const Plantillas = () => {
               </button>
               <button
                 type="button"
-                class="btn btn-dark btn-sm btn-block text-left mb-2"
+                className="btn btn-dark btn-sm btn-block text-left mb-2"
                 style={{ fontFamily: 'arial' }}
                 onClick={() => ChangeFuente('arial')}
               >
@@ -422,7 +437,7 @@ const Plantillas = () => {
               </button>
               <button
                 type="button"
-                class="btn btn-dark btn-sm btn-block text-left mb-2"
+                className="btn btn-dark btn-sm btn-block text-left mb-2"
                 style={{ fontFamily: 'sans-serif' }}
                 onClick={() => ChangeFuente('')}
               >
@@ -490,7 +505,7 @@ const Plantillas = () => {
                 <>
                   <button
                     type="button"
-                    class="btn btn-success"
+                    className="btn btn-success"
                     title="Crear plantilla"
                     style={{ fontSize: '18px' }}
                     onClick={() => CrearPlantilla()}
@@ -499,7 +514,7 @@ const Plantillas = () => {
                   </button>
                   <button
                     type="button"
-                    class="btn btn-primary ml-1"
+                    className="btn btn-primary ml-1"
                     title="Elegir conjuntos"
                     style={{ fontSize: '18px' }}
                     onClick={handleShow}
@@ -511,7 +526,7 @@ const Plantillas = () => {
                 <>
                   <button
                     type="button"
-                    class="btn btn-warning"
+                    className="btn btn-warning"
                     title="Guardar"
                     style={{ fontSize: '18px' }}
                     onClick={() => GuardarPlantilla()}
@@ -520,7 +535,7 @@ const Plantillas = () => {
                   </button>
                   <button
                     type="button"
-                    class="btn btn-primary ml-1"
+                    className="btn btn-primary ml-1"
                     title="Elegir conjuntos"
                     style={{ fontSize: '18px' }}
                     onClick={handleShow}
@@ -543,7 +558,7 @@ const Plantillas = () => {
           <Modal.Body>
             {conjuntosDB.length === 0 ? (
               <>
-                <span class="badge badge-pill badge-warning">
+                <span className="badge badge-pill badge-warning">
                   No hay conjuntos creados.
                 </span>
               </>
@@ -564,13 +579,13 @@ const Plantillas = () => {
                       <li className="list-group-item" key={item._id}>
                         {item.NombreConjuntoEntradas}
                         <div
-                          class="btn-group btn-group-sm float-right"
+                          className="btn-group btn-group-sm float-right"
                           role="group"
                           aria-label="..."
                         >
                           <button
                             type="button"
-                            class="btn btn-primary btn-sm"
+                            className="btn btn-primary btn-sm"
                             onClick={() => BottonUsar(item._id)}
                           >
                             Usar
@@ -586,10 +601,10 @@ const Plantillas = () => {
 
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
-              Close
+              Cerrar
             </Button>
             <Button variant="primary" onClick={handleClose}>
-              Save Changes
+              Guardar cambios
             </Button>
           </Modal.Footer>
         </Modal>
