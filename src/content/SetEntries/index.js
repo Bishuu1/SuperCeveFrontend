@@ -1206,7 +1206,7 @@ const SetEntries = () => {
                                 </th>
                                 <th scope="col">Nombre conferencia</th>
                                 <th scope="col">Autores</th>
-                                <th scope="col">Intervao página</th>
+                                <th scope="col">Intervalo página</th>
                                 <th scope="col">Fecha</th>
                               </tr>
                             </thead>
@@ -1242,7 +1242,7 @@ const SetEntries = () => {
                                     </th>
                                     <td>{entrie.NombreEntrada}</td>
                                     <td>{entrie.Autores}</td>
-                                    <td>{entrie.IntervaloPagina}</td>
+                                    <td>{entrie.IntervaloPaginas}</td>
                                     <td>
                                       {entrie.FechaEntrada !== null ? (
                                         <Moment format="D MMM YYYY" withTitle>

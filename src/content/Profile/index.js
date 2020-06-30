@@ -5,6 +5,7 @@ import { AppContext } from '../../app/AppContext';
 import UsersAPI from '../Users/users-api';
 import { useHistory } from 'react-router-dom';
 import { showToast } from '../../components/common/Toast';
+import moment from 'moment';
 
 const Profile = () => {
   const { user } = useContext(AppContext);
@@ -13,11 +14,24 @@ const Profile = () => {
     initialValues: {
       Nombre: user?.user.Nombre,
       Rut: user?.user.Rut,
-      FechaNacimiento: user?.user.FechaNacimiento,
+      FechaNacimiento: moment(user?.user.FechaNacimiento).format('DD/MM/YYYY'),
       LinkGoogleScholar: user?.user.LinkGoogleScholar,
+      updateScholar: false,
+      Contraseña: '',
     },
     onSubmit: (values) => {
-      UsersAPI.updateUser(user.user._id, values)
+      UsersAPI.updateUser(
+        user.user._id,
+        values.Contraseña
+          ? values
+          : {
+              Nombre: values.Nombre,
+              Rut: values.Rut,
+              FechaNacimiento: values.FechaNacimiento,
+              LinkGoogleScholar: values.LinkGoogleScholar,
+              updateScholar: values.updateScholar,
+            }
+      )
         .then((response) => response.UsuarioUpdated)
         .then((us) => {
           console.log(us);
@@ -55,7 +69,7 @@ const Profile = () => {
                   className="card bg-dark text-white col-md-5"
                   style={{ border: '0pt' }}
                 >
-                  <h4>usuario@mail.udp.cl</h4>
+                  <h4>{user.user?.CorreoUsuario}</h4>
                 </div>
 
                 <div
@@ -73,7 +87,7 @@ const Profile = () => {
                     onClick={formik.handleSubmit}
                   >
                     {' '}
-                    Cambiar contraseña
+                    Actualizar
                   </Button>
                 </div>
               </Row>
@@ -122,6 +136,24 @@ const Profile = () => {
 
                 <Form.Group as={Row}>
                   <Form.Label column sm="3">
+                    Contraseña
+                  </Form.Label>
+                  <Col sm="8">
+                    <Form.Control
+                      name="Contraseña"
+                      onChange={formik.handleChange}
+                      value={formik.values.Contraseña}
+                    />
+                  </Col>
+                  <Col xs={{ offset: 3 }}>
+                    <small>
+                      Si deja el campo vacio no se modificara la contraseña.
+                    </small>
+                  </Col>
+                </Form.Group>
+
+                <Form.Group as={Row}>
+                  <Form.Label column sm="3">
                     Código de google scholar
                   </Form.Label>
                   <Col sm="8">
@@ -132,6 +164,24 @@ const Profile = () => {
                     />
                   </Col>
                 </Form.Group>
+                <Row>
+                  <Col sm={{ offset: 3 }}>
+                    <Form.Group>
+                      <small>
+                        <strong>
+                          Si marca el checkbox, el sistema actualizara sus
+                          entradas con las del codigo asociado.
+                        </strong>
+                      </small>
+                      <Form.Control
+                        type="checkbox"
+                        name="updateScholar"
+                        onChange={formik.handleChange}
+                        value={formik.values.LinkGoogleScholar}
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
               </Form>
             </div>
           </Card>

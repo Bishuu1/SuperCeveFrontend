@@ -7,6 +7,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import UsersAPI from '../users-api';
 import { showToast } from '../../../components/common/Toast';
 import { AppContext } from '../../../app/AppContext';
+import moment from 'moment';
 const AddUser = () => {
   const history = useHistory();
   const [user, setUser] = useState(null);
@@ -56,10 +57,10 @@ const AddUser = () => {
               initialValues={{
                 Nombre: user.Nombre ? user.Nombre : '',
                 NivelAcceso: user.NivelAcceso ? user.NivelAcceso : '',
-                Contraseña: user.Contraseña ? user.Contraseña : '',
+                Contraseña: '',
                 Rut: user.Rut ? user.Rut : '',
                 FechaNacimiento: user.FechaNacimiento
-                  ? user.FechaNacimiento
+                  ? moment(user.FechaNacimiento).format('DD/MM/YYYY')
                   : '',
                 LinkGoogleScholar: user.LinkGoogleScholar
                   ? user.LinkGoogleScholar
@@ -71,16 +72,8 @@ const AddUser = () => {
                 CorreoUsuario: Yup.string()
                   .email('Formato incorrecto')
                   .required('Ingrese usuario'),
-                Contraseña: Yup.string().required('Ingrese contraseña'),
                 NivelAcceso: Yup.string().required(
                   'Escoja el nivel de accceso'
-                ),
-                Rut: Yup.string().required('Rut requerido'),
-                FechaNacimiento: Yup.string().required(
-                  'Fecha de nacimiento requerida'
-                ),
-                LinkGoogleScholar: Yup.string().required(
-                  'Ingrese id del perfil'
                 ),
               })}
               onSubmit={handleSubmit}
@@ -91,7 +84,12 @@ const AddUser = () => {
                     <Input type="text" name="Nombre" label="Nombre" />
                   </Col>
                   <Col sm={{ span: 5, offset: 2 }}>
-                    <Input type="text" name="Contraseña" label="Contraseña" />
+                    <Input
+                      type="text"
+                      name="Contraseña"
+                      label="Contraseña"
+                      extra="Si deja vacio el campo no se modificara la contraseña."
+                    />
                   </Col>
                 </Row>
                 <Row>
@@ -144,7 +142,7 @@ const AddUser = () => {
                         </Button>
                       </Col>
                       <Col sm={{ span: 6, offset: 2 }}>
-                        <Button type="submit">Crear usuario</Button>
+                        <Button type="submit">Editar usuario</Button>
                       </Col>
                     </Row>
                   </Col>

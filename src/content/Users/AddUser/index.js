@@ -56,11 +56,6 @@ const AddUser = () => {
                 .required('Ingrese usuario'),
               Contraseña: Yup.string().required('Ingrese contraseña'),
               NivelAcceso: Yup.string().required('Escoja el nivel de accceso'),
-              Rut: Yup.string().required('Rut requerido'),
-              FechaNacimiento: Yup.string().required(
-                'Fecha de nacimiento requerida'
-              ),
-              LinkGoogleScholar: Yup.string().required('Ingrese id del perfil'),
             })}
             onSubmit={handleSubmit}
           >
