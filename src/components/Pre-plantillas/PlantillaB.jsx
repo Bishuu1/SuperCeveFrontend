@@ -55,7 +55,7 @@ const PlantillaB = (props) => {
               )}
               {props.plantilla.Color == 'negro' ? (
                 <div
-                  className="bg-secondary text-white ml-3"
+                  className="bg-secondary text-white"
                   style={{ width: '140px', minHeight: '496px' }}
                 >
                   <PlantillaBDatos
