@@ -1,5 +1,5 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
-import PlantillaA from '../../components/Pre-plantillas/PlantillaA';
+import React, { Fragment, useContext, useEffect, useState } from "react";
+import PlantillaA from "../../components/Pre-plantillas/PlantillaA";
 import {
   Container,
   col,
@@ -8,17 +8,17 @@ import {
   ListGroupItem,
   ListGroup,
   Modal,
-} from 'react-bootstrap';
-import ColumnaPlantillas from '../../components/Pre-plantillas/ColumnaPlantillas';
-import PlantillaB from '../../components/Pre-plantillas/PlantillaB';
-import PlantillaC from '../../components/Pre-plantillas/PlantillaC';
-import { AppContext } from '../../app/AppContext';
-import PlantillasAPI from '../Plantillas/plantillas-api';
-import { showToast } from '../../components/common/Toast';
-import { useHistory, useParams } from 'react-router-dom';
-import EntriesAPI from '../SetEntries/entries-api';
-import UsersAPI from '../Users/users-api';
-import moment from 'moment';
+} from "react-bootstrap";
+import ColumnaPlantillas from "../../components/Pre-plantillas/ColumnaPlantillas";
+import PlantillaB from "../../components/Pre-plantillas/PlantillaB";
+import PlantillaC from "../../components/Pre-plantillas/PlantillaC";
+import { AppContext } from "../../app/AppContext";
+import PlantillasAPI from "../Plantillas/plantillas-api";
+import { showToast } from "../../components/common/Toast";
+import { useHistory, useParams } from "react-router-dom";
+import EntriesAPI from "../SetEntries/entries-api";
+import UsersAPI from "../Users/users-api";
+import moment from "moment";
 const Plantillas = () => {
   const { user } = useContext(AppContext);
   const history = useHistory();
@@ -32,27 +32,27 @@ const Plantillas = () => {
   const Academico = [
     //academico de muestra
     {
-      NombreAcademico: 'Nombre Apellido',
-      rut: '11252214',
-      FechaNacimiento: '17/7/2123',
-      LinkGoogleScholar: 'jjs88jk',
+      NombreAcademico: "Nombre Apellido",
+      rut: "11252214",
+      FechaNacimiento: "17/7/2123",
+      LinkGoogleScholar: "jjs88jk",
     },
   ];
   const [academico, setAcademico] = useState({
-    NombreAcademico: 'Nombre Apellido',
-    Rut: '11252214',
-    FechaNacimiento: '17/7/2123',
-    LinkGoogleScholar: 'jjk99',
-    Correo: 'correo@mail.com',
+    NombreAcademico: "Nombre Apellido",
+    Rut: "11252214",
+    FechaNacimiento: "17/7/2123",
+    LinkGoogleScholar: "jjk99",
+    Correo: "correo@mail.com",
     Descripcion:
-      'Profesor asistente, Escuela informática y Telecomunicaciones, Jornada completa...',
+      "Profesor asistente, Escuela informática y Telecomunicaciones, Jornada completa...",
   });
   useEffect(() => {
     UsersAPI.getUser(user.user._id).then((response) => {
       setAcademico({
         ...response.Usuario,
         FechaNacimiento: moment(response.Usuario.FechaNacimiento).format(
-          'DD/MM/YYYY'
+          "DD/MM/YYYY"
         ),
       });
     });
@@ -60,129 +60,129 @@ const Plantillas = () => {
   const entradasData = [
     //entradas de muestra
     {
-      _id: '8 ',
-      NombreEntrada: 'Nombre de entrada',
-      TipoEntrada: 'Publicación',
-      IntervaloPaginas: '15-21',
-      Autores: 'autor1, autor2',
-      FechaEntrada: '2020-06-15T22:21:20.300Z',
-      Revista: 'Revista',
+      _id: "8 ",
+      NombreEntrada: "Nombre de entrada",
+      TipoEntrada: "Publicación",
+      IntervaloPaginas: "15-21",
+      Autores: "autor1, autor2",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
+      Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: null,
-      LugarObtenido: 'Lugar obtenido',
-      Institucion: 'Institucion',
+      LugarObtenido: "Lugar obtenido",
+      Institucion: "Institucion",
     },
     {
-      _id: '7',
-      NombreEntrada: 'Nombre de entrada',
-      TipoEntrada: 'Publicación',
-      IntervaloPaginas: '15-21',
-      Autores: 'autor1, autor2',
-      FechaEntrada: '2020-06-15T22:21:20.300Z',
-      Revista: 'Revista',
+      _id: "7",
+      NombreEntrada: "Nombre de entrada",
+      TipoEntrada: "Publicación",
+      IntervaloPaginas: "15-21",
+      Autores: "autor1, autor2",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
+      Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: null,
-      LugarObtenido: 'Lugar obtenido',
-      Institucion: 'Institucion',
+      LugarObtenido: "Lugar obtenido",
+      Institucion: "Institucion",
     },
     {
-      _id: '5',
-      NombreEntrada: 'Nombre de entrada',
-      TipoEntrada: 'Concurso',
-      IntervaloPaginas: '15-21',
-      Autores: 'autor1, autor2',
-      FechaEntrada: '2020-06-15T22:21:20.300Z',
-      Revista: 'Revista',
+      _id: "5",
+      NombreEntrada: "Nombre de entrada",
+      TipoEntrada: "Concurso",
+      IntervaloPaginas: "15-21",
+      Autores: "autor1, autor2",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
+      Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
       Categoria: null,
-      LugarObtenido: 'Lugar obtenido',
-      Institucion: 'Institucion',
+      LugarObtenido: "Lugar obtenido",
+      Institucion: "Institucion",
     },
     {
-      _id: '4',
-      NombreEntrada: 'Nombre de entrada',
-      TipoEntrada: 'Premio',
-      IntervaloPaginas: '15-21',
-      Autores: 'autor1, autor2',
-      FechaEntrada: '2020-06-15T22:21:20.300Z',
-      Revista: 'Revista',
+      _id: "4",
+      NombreEntrada: "Nombre de entrada",
+      TipoEntrada: "Premio",
+      IntervaloPaginas: "15-21",
+      Autores: "autor1, autor2",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
+      Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
-      Categoria: 'Categoria',
-      LugarObtenido: 'Lugar obtenido',
-      Institucion: 'Institucion',
+      Categoria: "Categoria",
+      LugarObtenido: "Lugar obtenido",
+      Institucion: "Institucion",
     },
     {
-      _id: '1',
-      NombreEntrada: 'Nombre de entrada',
-      TipoEntrada: 'Premio',
-      IntervaloPaginas: '15-21',
-      Autores: 'autor1, autor2',
-      FechaEntrada: '2020-06-15T22:21:20.300Z',
-      Revista: 'Revista',
+      _id: "1",
+      NombreEntrada: "Nombre de entrada",
+      TipoEntrada: "Premio",
+      IntervaloPaginas: "15-21",
+      Autores: "autor1, autor2",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
+      Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
-      Categoria: 'Categoria',
-      LugarObtenido: 'Lugar obtenido',
-      Institucion: 'Institucion',
+      Categoria: "Categoria",
+      LugarObtenido: "Lugar obtenido",
+      Institucion: "Institucion",
     },
     {
-      _id: '2',
-      NombreEntrada: 'Nombre de entrada',
-      TipoEntrada: 'Publicación',
-      IntervaloPaginas: '15-21',
-      Autores: 'autor1, autor2',
-      FechaEntrada: '2020-06-15T22:21:20.300Z',
-      Revista: 'Revista',
+      _id: "2",
+      NombreEntrada: "Nombre de entrada",
+      TipoEntrada: "Publicación",
+      IntervaloPaginas: "15-21",
+      Autores: "autor1, autor2",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
+      Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
-      Categoria: 'Categoria',
-      LugarObtenido: 'Lugar obtenido',
+      Categoria: "Categoria",
+      LugarObtenido: "Lugar obtenido",
       Institucion: null,
     },
     {
-      _id: '3',
-      NombreEntrada: 'Nombre de entrada',
-      TipoEntrada: 'Concurso',
-      IntervaloPaginas: '15-21',
-      Autores: 'autor1, autor2',
-      FechaEntrada: '2020-06-15T22:21:20.300Z',
-      Revista: 'Revista',
+      _id: "3",
+      NombreEntrada: "Nombre de entrada",
+      TipoEntrada: "Concurso",
+      IntervaloPaginas: "15-21",
+      Autores: "autor1, autor2",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
+      Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
-      Categoria: 'Categoria',
-      LugarObtenido: 'Lugar obtenido',
-      Institucion: 'Institucion',
+      Categoria: "Categoria",
+      LugarObtenido: "Lugar obtenido",
+      Institucion: "Institucion",
     },
     {
-      _id: '10',
-      NombreEntrada: 'Nombre de entrada',
-      TipoEntrada: 'Conferencia',
-      IntervaloPaginas: '15-21',
-      Autores: 'autor1, autor2',
-      FechaEntrada: '2020-06-15T22:21:20.300Z',
-      Revista: 'Revista',
+      _id: "10",
+      NombreEntrada: "Nombre de entrada",
+      TipoEntrada: "Conferencia",
+      IntervaloPaginas: "15-21",
+      Autores: "autor1, autor2",
+      FechaEntrada: "2020-06-15T22:21:20.300Z",
+      Revista: "Revista",
       Volumen: 1,
       NumeroTomo: 1,
-      Categoria: 'Categoria',
-      LugarObtenido: 'Lugar obtenido',
-      Institucion: 'Institucion',
+      Categoria: "Categoria",
+      LugarObtenido: "Lugar obtenido",
+      Institucion: "Institucion",
     },
   ];
   const [entradas, setEntradas] = useState(entradasData); //estado de entradas de muestra
 
   const [plantilla, setPlantilla] = useState({
     //plantilla que se muestra
-    Id: '',
-    Nombre: '',
-    Color: 'azul',
-    Fuente: 'Georgia',
+    Id: "",
+    Nombre: "",
+    Color: "azul",
+    Fuente: "Georgia",
     Descripcion:
-      'Profesor asistente, Escuela informática y Telecomunicaciones, Jornada completa...',
-    TipoPlantilla: 'A',
+      "Profesor asistente, Escuela informática y Telecomunicaciones, Jornada completa...",
+    TipoPlantilla: "A",
   });
 
   const [conjuntosDB, setConjuntosDB] = useState([]); //(conjuntos del usuario)
@@ -190,7 +190,7 @@ const Plantillas = () => {
   const [plantillasDB, setPlantillasDB] = useState([]); //Plantillas de la BD
 
   useEffect(() => {
-    user?.user.NivelAcceso === 1 && history.push('/');
+    user?.user.NivelAcceso === 1 && history.push("/");
   }, [history, user]);
   useEffect(() => {
     ObtenerDatos();
@@ -198,7 +198,7 @@ const Plantillas = () => {
   }, [update]);
 
   const ObtenerDatos = async () => {
-    const data = await fetch('http://localhost:4000/api/Template');
+    const data = await fetch("http://localhost:4000/api/Template");
     const plantillas = await data.json();
     setPlantillasDB(plantillas.Templates);
   };
@@ -214,7 +214,7 @@ const Plantillas = () => {
       setConjuntosDB(conjuntos);
       console.log(conjuntosDB);
     });
-    user?.NivelAcceso === 1 && history.push('/');
+    user?.NivelAcceso === 1 && history.push("/");
   };
 
   const ChangeColor = (color) => {
@@ -242,12 +242,12 @@ const Plantillas = () => {
   const ChangeTipoPlantilla = (tipo) => {
     console.log(tipo);
     setPlantilla({
-      Id: '',
-      Nombre: '',
+      Id: "",
+      Nombre: "",
       Descripcion:
-        'Profesor asistente, Escuela informática y Telecomunicaciones, Jornada completa...',
-      Color: 'azul',
-      Fuente: 'Georgia',
+        "Profesor asistente, Escuela informática y Telecomunicaciones, Jornada completa...",
+      Color: "azul",
+      Fuente: "Georgia",
       TipoPlantilla: tipo,
     });
   };
@@ -278,8 +278,8 @@ const Plantillas = () => {
   };
 
   const CrearPlantilla = async (item) => {
-    if (plantilla.Nombre === '') {
-      plantilla.Nombre = 'Default';
+    if (plantilla.Nombre === "") {
+      plantilla.Nombre = "Default";
     }
     item = {
       Nombre: plantilla.Nombre,
@@ -291,41 +291,41 @@ const Plantillas = () => {
     await PlantillasAPI.createTemplate(item)
       .then((response) => {
         showToast({
-          type: 'success',
-          text: 'Se ha guardado plantilla con éxito',
+          type: "success",
+          text: "Se ha guardado plantilla con éxito",
         });
       })
       .catch(() => {
         showToast({
-          type: 'error',
-          text: 'Error al guardar plantilla',
+          type: "error",
+          text: "Error al guardar plantilla",
         });
       })
       .finally(() => {
-        history.push('/Plantillas');
+        history.push("/Plantillas");
       });
     setUpdate(!update);
   };
 
   const GuardarPlantilla = async () => {
-    if (plantilla.Nombre === '') {
-      plantilla.Nombre = 'Default';
+    if (plantilla.Nombre === "") {
+      plantilla.Nombre = "Default";
     }
     await PlantillasAPI.updateTemplate(plantilla.Id, plantilla)
       .then(() => {
         showToast({
-          type: 'success',
-          text: 'Se ha modificado la plantilla con éxito',
+          type: "success",
+          text: "Se ha modificado la plantilla con éxito",
         });
       })
       .catch(() => {
         showToast({
-          type: 'error',
-          text: 'Error en la modificación de plantilla',
+          type: "error",
+          text: "Error en la modificación de plantilla",
         });
       })
       .finally(() => {
-        history.push('/Plantillas');
+        history.push("/Plantillas");
       });
     setUpdate(!update);
   };
@@ -333,14 +333,14 @@ const Plantillas = () => {
     await PlantillasAPI.deleteTemplate(idPlantilla)
       .then(() => {
         showToast({
-          type: 'success',
-          text: 'Se ha eliminado al plantilla con éxito',
+          type: "success",
+          text: "Se ha eliminado al plantilla con éxito",
         });
       })
       .catch(() => {
         showToast({
-          type: 'error',
-          text: 'Error en la eliminación de plantilla',
+          type: "error",
+          text: "Error en la eliminación de plantilla",
         });
       });
     setUpdate(!update);
@@ -353,7 +353,7 @@ const Plantillas = () => {
       console.log(entradas);
       setEntradas(entradasAPI);
     });
-    user?.NivelAcceso === 1 && history.push('/');
+    user?.NivelAcceso === 1 && history.push("/");
     handleClose();
   };
 
@@ -368,7 +368,7 @@ const Plantillas = () => {
         />
         <div
           className="col-md-3 bg-secondary text-white"
-          style={{ minWidth: '310px' }}
+          style={{ minWidth: "310px" }}
         >
           <div className="m-4">
             <h4>Opciones</h4>
@@ -400,20 +400,20 @@ const Plantillas = () => {
               <button
                 type="button"
                 className="btn btn-primary btn-sm border-light"
-                style={{ borderRadius: '50%' }}
-                onClick={() => ChangeColor('azul')}
+                style={{ borderRadius: "50%" }}
+                onClick={() => ChangeColor("azul")}
               ></button>
               <button
                 type="button"
                 className="btn btn-danger btn-sm border-light ml-3"
-                style={{ borderRadius: '50%' }}
-                onClick={() => ChangeColor('rojo')}
+                style={{ borderRadius: "50%" }}
+                onClick={() => ChangeColor("rojo")}
               ></button>
               <button
                 type="button"
                 className="btn btn-dark btn-sm border-light ml-3"
-                style={{ borderRadius: '50%' }}
-                onClick={() => ChangeColor('negro')}
+                style={{ borderRadius: "50%" }}
+                onClick={() => ChangeColor("negro")}
               ></button>
             </div>
 
@@ -422,24 +422,24 @@ const Plantillas = () => {
               <button
                 type="button"
                 className="btn btn-dark btn-sm btn-block text-left mb-2"
-                style={{ fontFamily: 'Consolas' }}
-                onClick={() => ChangeFuente('Georgia')}
+                style={{ fontFamily: "Consolas" }}
+                onClick={() => ChangeFuente("Georgia")}
               >
                 Tipo 1
               </button>
               <button
                 type="button"
                 className="btn btn-dark btn-sm btn-block text-left mb-2"
-                style={{ fontFamily: 'arial' }}
-                onClick={() => ChangeFuente('arial')}
+                style={{ fontFamily: "arial" }}
+                onClick={() => ChangeFuente("arial")}
               >
                 Tipo 2
               </button>
               <button
                 type="button"
                 className="btn btn-dark btn-sm btn-block text-left mb-2"
-                style={{ fontFamily: 'sans-serif' }}
-                onClick={() => ChangeFuente('')}
+                style={{ fontFamily: "sans-serif" }}
+                onClick={() => ChangeFuente("")}
               >
                 Tipo 3
               </button>
@@ -454,9 +454,9 @@ const Plantillas = () => {
                 value={plantilla.Descripcion}
                 onChange={ChangeDescripcion}
                 style={{
-                  fontSize: '12px',
-                  maxHeight: '80px',
-                  minHeight: '70px',
+                  fontSize: "12px",
+                  maxHeight: "80px",
+                  minHeight: "70px",
                 }}
               ></textarea>
             </div>
@@ -464,35 +464,35 @@ const Plantillas = () => {
         </div>
         <div
           className="col-md-4 bg-light card border-secondary  "
-          style={{ minWidth: '510px' }}
+          style={{ minWidth: "510px" }}
         >
-          <div className="m-4" style={{ height: '420px' }}>
-            {plantilla.TipoPlantilla === 'A' ? (
+          <div className="m-4" style={{ height: "420px" }}>
+            {plantilla.TipoPlantilla === "A" ? (
               <PlantillaA
                 academico={academico}
                 plantilla={plantilla}
                 entradas={entradas}
               />
             ) : (
-              ''
+              ""
             )}
-            {plantilla.TipoPlantilla === 'B' ? (
+            {plantilla.TipoPlantilla === "B" ? (
               <PlantillaB
                 academico={academico}
                 plantilla={plantilla}
                 entradas={entradas}
               />
             ) : (
-              ''
+              ""
             )}
-            {plantilla.TipoPlantilla === 'C' ? (
+            {plantilla.TipoPlantilla === "C" ? (
               <PlantillaC
                 academico={academico}
                 plantilla={plantilla}
                 entradas={entradas}
               />
             ) : (
-              ''
+              ""
             )}
           </div>
           <ul className="pagination justify-content-center">
@@ -501,13 +501,13 @@ const Plantillas = () => {
               role="group"
               aria-label="Basic example"
             >
-              {plantilla.Id === '' ? (
+              {plantilla.Id === "" ? (
                 <>
                   <button
                     type="button"
                     className="btn btn-success"
                     title="Crear plantilla"
-                    style={{ fontSize: '18px' }}
+                    style={{ fontSize: "18px" }}
                     onClick={() => CrearPlantilla()}
                   >
                     Crear plantilla
@@ -516,11 +516,11 @@ const Plantillas = () => {
                     type="button"
                     className="btn btn-primary ml-1"
                     title="Elegir conjuntos"
-                    style={{ fontSize: '18px' }}
+                    style={{ fontSize: "18px" }}
                     onClick={handleShow}
                   >
                     Elegir conjunto
-                  </button>{' '}
+                  </button>{" "}
                 </>
               ) : (
                 <>
@@ -528,7 +528,7 @@ const Plantillas = () => {
                     type="button"
                     className="btn btn-warning"
                     title="Guardar"
-                    style={{ fontSize: '18px' }}
+                    style={{ fontSize: "18px" }}
                     onClick={() => GuardarPlantilla()}
                   >
                     Guardar cambios
@@ -537,11 +537,11 @@ const Plantillas = () => {
                     type="button"
                     className="btn btn-primary ml-1"
                     title="Elegir conjuntos"
-                    style={{ fontSize: '18px' }}
+                    style={{ fontSize: "18px" }}
                     onClick={handleShow}
                   >
                     Elegir conjunto
-                  </button>{' '}
+                  </button>{" "}
                 </>
               )}
             </div>
@@ -567,14 +567,14 @@ const Plantillas = () => {
                 <div
                   className="scroll"
                   style={{
-                    position: 'relative',
-                    height: '400px',
-                    width: '100%',
-                    overflow: 'auto',
+                    position: "relative",
+                    height: "400px",
+                    width: "100%",
+                    overflow: "auto",
                   }}
                 >
                   <ul className="list-group">
-                    {' '}
+                    {" "}
                     {conjuntosDB.map((item) => (
                       <li className="list-group-item" key={item._id}>
                         {item.NombreConjuntoEntradas}

@@ -1,9 +1,9 @@
-import React, { useContext } from 'react';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import super_cv from '../../assets/images/super_cv.png';
-import { useHistory } from 'react-router-dom';
-import { AppContext } from '../../app/AppContext';
+import React, { useContext } from "react";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import super_cv from "../../assets/images/super_cv.png";
+import { useHistory } from "react-router-dom";
+import { AppContext } from "../../app/AppContext";
 
 const PrivateLayout = ({ children }) => {
   const { user } = useContext(AppContext);
@@ -15,10 +15,10 @@ const PrivateLayout = ({ children }) => {
         expand="lg"
         bg="dark"
         variant="dark"
-        style={{ marginBottom: '50px' }}
+        style={{ marginBottom: "50px" }}
       >
         <Navbar.Brand href="#home">
-          {' '}
+          {" "}
           <img
             src={super_cv}
             width="110"
@@ -31,26 +31,26 @@ const PrivateLayout = ({ children }) => {
         {user.user && (
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link onClick={() => history.push('/perfil')}>
+              <Nav.Link onClick={() => history.push("/perfil")}>
                 Perfil
               </Nav.Link>
               {user.user.NivelAcceso === 3 && (
-                <Nav.Link onClick={() => history.push('/curriculum')}>
+                <Nav.Link onClick={() => history.push("/curriculum")}>
                   Curriculum
                 </Nav.Link>
               )}
               {user.user.NivelAcceso === 3 && (
-                <Nav.Link onClick={() => history.push('/conjunto-entradas')}>
+                <Nav.Link onClick={() => history.push("/conjunto-entradas")}>
                   Conjunto de entrada
                 </Nav.Link>
               )}
               {user.user.NivelAcceso === 3 && (
-                <Nav.Link onClick={() => history.push('/plantillas')}>
+                <Nav.Link onClick={() => history.push("/plantillas")}>
                   Plantillas
                 </Nav.Link>
               )}
               {user.user.NivelAcceso === 1 && (
-                <Nav.Link onClick={() => history.push('/usuarios')}>
+                <Nav.Link onClick={() => history.push("/usuarios")}>
                   Usuarios
                 </Nav.Link>
               )}
@@ -58,9 +58,9 @@ const PrivateLayout = ({ children }) => {
             <Nav>
               <Nav.Link
                 onClick={() => {
-                  window.sessionStorage.removeItem('user');
+                  window.sessionStorage.removeItem("user");
                   user.actions.cleanUser();
-                  history.push('/login');
+                  history.push("/login");
                 }}
               >
                 Cerrar sesión
@@ -68,7 +68,7 @@ const PrivateLayout = ({ children }) => {
             </Nav>
           </Navbar.Collapse>
         )}
-      </Navbar>{' '}
+      </Navbar>{" "}
       <main>{children}</main>
     </>
   );
